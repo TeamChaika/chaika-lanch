@@ -8,7 +8,7 @@ export const site = {
   weeklyGift: {
     requiredDays: 5,
     name: 'Выпечка в подарок',
-    image: '/images/weekly-gift.png',
+    image: '/images/weekly-gift.webp',
     imageAlt: 'Слоёная выпечка с кремом и попкорном',
   },
   demo: true,

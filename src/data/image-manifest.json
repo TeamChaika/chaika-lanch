@@ -1,0 +1,412 @@
+{
+  "/images/beef-stroganoff.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/beef-stroganoff-160-be0f05f1427d.webp",
+      "bytes": 6010
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/beef-stroganoff-320-31c95b8400d3.webp",
+      "bytes": 19048
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/beef-stroganoff-640-9ad1c877331e.webp",
+      "bytes": 65782
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/beef-stroganoff-960-8e70f3a21dc6.webp",
+      "bytes": 132166
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/beef-stroganoff-1280-a5343d56df2d.webp",
+      "bytes": 207314
+    }
+  ],
+  "/images/chicken-cutlet.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/chicken-cutlet-160-166f087ecc0b.webp",
+      "bytes": 6576
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/chicken-cutlet-320-abb838596257.webp",
+      "bytes": 20682
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/chicken-cutlet-640-5e954ebb9c2d.webp",
+      "bytes": 68340
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/chicken-cutlet-960-cc68ba0d241d.webp",
+      "bytes": 140412
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/chicken-cutlet-1280-78f3c29b1ea4.webp",
+      "bytes": 223418
+    }
+  ],
+  "/images/chicken-mushroom.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/chicken-mushroom-160-78f678b3502b.webp",
+      "bytes": 6822
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/chicken-mushroom-320-9ad500015037.webp",
+      "bytes": 21980
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/chicken-mushroom-640-751ffb2bfd69.webp",
+      "bytes": 72680
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/chicken-mushroom-960-384f74ff96e5.webp",
+      "bytes": 146354
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/chicken-mushroom-1280-e55b3deb29ea.webp",
+      "bytes": 229612
+    }
+  ],
+  "/images/chicken-plov.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/chicken-plov-160-3b8d96ec0ebc.webp",
+      "bytes": 7346
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/chicken-plov-320-77f21ef589e2.webp",
+      "bytes": 24584
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/chicken-plov-640-1a2e759af44b.webp",
+      "bytes": 81702
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/chicken-plov-960-8846ce4d7656.webp",
+      "bytes": 160532
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/chicken-plov-1280-c70c43ed45e9.webp",
+      "bytes": 252264
+    }
+  ],
+  "/images/classic.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/classic-160-419140878635.webp",
+      "bytes": 6954
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/classic-320-d109682817df.webp",
+      "bytes": 22792
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/classic-640-8dc4f17e573b.webp",
+      "bytes": 75218
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/classic-960-54d64ece39e0.webp",
+      "bytes": 151434
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/classic-1280-359e9d6e4d46.webp",
+      "bytes": 241514
+    }
+  ],
+  "/images/hake-couscous.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/hake-couscous-160-19ab71be765d.webp",
+      "bytes": 6562
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/hake-couscous-320-75f74ece11ad.webp",
+      "bytes": 21966
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/hake-couscous-640-427e8a7e83d1.webp",
+      "bytes": 76562
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/hake-couscous-960-52787209fd7b.webp",
+      "bytes": 155098
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/hake-couscous-1280-2e2531008607.webp",
+      "bytes": 242780
+    }
+  ],
+  "/images/homestyle.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/homestyle-160-ab8be66e65a5.webp",
+      "bytes": 6858
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/homestyle-320-538f13a0d10d.webp",
+      "bytes": 22418
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/homestyle-640-c4b140e0672b.webp",
+      "bytes": 73768
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/homestyle-960-31f3866e9055.webp",
+      "bytes": 142380
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/homestyle-1280-5d38d01199a1.webp",
+      "bytes": 216790
+    }
+  ],
+  "/images/meatballs-pasta.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/meatballs-pasta-160-e84a096d1e8c.webp",
+      "bytes": 6504
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/meatballs-pasta-320-86e84cfea2d3.webp",
+      "bytes": 20838
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/meatballs-pasta-640-409cc87bc809.webp",
+      "bytes": 65374
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/meatballs-pasta-960-c57c482f9f67.webp",
+      "bytes": 122850
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/meatballs-pasta-1280-2b7da5494b69.webp",
+      "bytes": 189032
+    }
+  ],
+  "/images/pork-potatoes.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/pork-potatoes-160-0b8564c4cfdf.webp",
+      "bytes": 6444
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/pork-potatoes-320-05ada5e7aed9.webp",
+      "bytes": 20816
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/pork-potatoes-640-960b2bf629f8.webp",
+      "bytes": 70518
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/pork-potatoes-960-9a31c07f7214.webp",
+      "bytes": 143524
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/pork-potatoes-1280-b77a219c99df.webp",
+      "bytes": 223454
+    }
+  ],
+  "/images/special.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/special-160-df02155fd7d8.webp",
+      "bytes": 6328
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/special-320-8f56831ab8bf.webp",
+      "bytes": 19978
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/special-640-803a5509c329.webp",
+      "bytes": 63516
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/special-960-7af15943e4e7.webp",
+      "bytes": 120676
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/special-1280-08ed87a10221.webp",
+      "bytes": 185824
+    }
+  ],
+  "/images/stuffed-peppers.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/stuffed-peppers-160-bf02153412b2.webp",
+      "bytes": 6620
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/stuffed-peppers-320-80337bf2b42d.webp",
+      "bytes": 21146
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/stuffed-peppers-640-a0ef70bdd505.webp",
+      "bytes": 68572
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/stuffed-peppers-960-878f73e6c1bf.webp",
+      "bytes": 134084
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/stuffed-peppers-1280-8b4de35367a6.webp",
+      "bytes": 210380
+    }
+  ],
+  "/images/turkey-bulgur.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/turkey-bulgur-160-7bdb8691ae9a.webp",
+      "bytes": 6452
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/turkey-bulgur-320-0daaa5537552.webp",
+      "bytes": 20874
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/turkey-bulgur-640-4241924afec1.webp",
+      "bytes": 68124
+    },
+    {
+      "width": 960,
+      "height": 640,
+      "path": "/images/optimized/turkey-bulgur-960-147fa04a8395.webp",
+      "bytes": 139802
+    },
+    {
+      "width": 1280,
+      "height": 853,
+      "path": "/images/optimized/turkey-bulgur-1280-066096eee75d.webp",
+      "bytes": 219600
+    }
+  ],
+  "/images/weekly-gift.webp": [
+    {
+      "width": 160,
+      "height": 107,
+      "path": "/images/optimized/weekly-gift-160-67075f4f5a71.webp",
+      "bytes": 2732
+    },
+    {
+      "width": 320,
+      "height": 213,
+      "path": "/images/optimized/weekly-gift-320-61751895625c.webp",
+      "bytes": 8796
+    },
+    {
+      "width": 640,
+      "height": 427,
+      "path": "/images/optimized/weekly-gift-640-6c45fcd861ae.webp",
+      "bytes": 25834
+    },
+    {
+      "width": 900,
+      "height": 600,
+      "path": "/images/optimized/weekly-gift-900-5b73309d9130.webp",
+      "bytes": 41226
+    }
+  ]
+}

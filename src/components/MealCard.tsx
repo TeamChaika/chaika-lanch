@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { FoodImage } from './FoodImage';
 import { ArrowUpRight, Minus, Plus } from 'lucide-react';
 import { Meal, money } from '@/data/menu';
 
@@ -10,10 +10,10 @@ export function Quantity({ value, onDecrease, onIncrease, label = 'Количе�
   </div>;
 }
 
-export function MealCard({ meal, quantity, onOpen, onAdd, onRemove }: { meal: Meal; quantity: number; onOpen: () => void; onAdd: () => void; onRemove: () => void }) {
+export function MealCard({ meal, quantity, onOpen, onAdd, onRemove, wide = false, eager = false }: { wide?: boolean; eager?: boolean; meal: Meal; quantity: number; onOpen: () => void; onAdd: () => void; onRemove: () => void }) {
   return <article className="meal-card">
     <button className="meal-photo-button" type="button" onClick={onOpen} aria-label={`Состав обеда ${meal.name}`}>
-      <Image src={meal.image} alt={meal.description} width={1000} height={667} className="meal-photo" sizes="(max-width: 700px) 100vw, 33vw" />
+      <FoodImage src={meal.image} alt={meal.description} width={1000} height={667} className="meal-photo" eager={eager} sizes={wide ? "(max-width: 700px) calc(100vw - 36px), (max-width: 1320px) 46vw, 610px" : "(max-width: 700px) calc(100vw - 36px), (max-width: 1320px) 30vw, 400px"} />
       <span className="meal-tag">{meal.tag}</span>
       <span className="photo-arrow"><ArrowUpRight size={20} /></span>
     </button>

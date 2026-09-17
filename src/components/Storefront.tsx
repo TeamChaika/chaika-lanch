@@ -11,6 +11,7 @@ import { Dialog } from './Dialog';
 import { AddressDialog, BusinessDialog, CartDialog, CheckoutDialog, ConfirmationDialog, OrderPreview, ProductDialog, WeekDialog } from './OrderDialogs';
 import { useCart } from './useCart';
 import { WeeklyOffer } from './WeeklyGift';
+import { FoodImage } from './FoodImage';
 
 type Modal = 'cart' | 'checkout' | 'confirmation' | 'address' | 'week' | 'business' | 'navigation' | null;
 
@@ -51,7 +52,7 @@ export function Storefront() {
 
     <main>
       <section className="hero container" aria-labelledby="hero-title">
-        <div className="hero-image"><Image src="/images/homestyle.png" alt="Обед с курицей, картофельным пюре, супом и салатом" fill priority sizes="(max-width: 700px) 1px, 65vw" /></div>
+        <div className="hero-image"><FoodImage src="/images/homestyle.webp" alt="Обед с курицей, картофельным пюре, супом и салатом" width={1280} height={853} eager desktopOnly sizes="(max-width: 1000px) 75vw, (max-width: 1320px) 65vw, 806px" /></div>
         <div className="hero-content"><span className="hero-kicker"><span /> Хороший день начинается с заботы</span><h1 id="hero-title"><span className="desktop-hero-title">Обед готов.<br />День свободен.</span><span className="mobile-hero-title">Что на обед?</span></h1><p>Готовые обеды в офис <span className="hero-price">450–550 ₽</span></p><a className="button button-primary hero-button" href="#menu">Выбрать обед <ArrowDown size={18} /></a><div className="hero-bottom"><Utensils size={16} /><span>Суп, горячее и салат в одном комплекте</span></div></div>
       </section>
 
@@ -59,7 +60,7 @@ export function Storefront() {
         <div className="menu-toolbar"><div><span className="eyebrow desktop-only">ВКУСНО. ПОНЯТНО. КАЖДЫЙ ДЕНЬ.</span><h2 id="menu-title">Выберите свой обед</h2></div><button className="address-button" onClick={() => setModal('address')}><MapPin size={18} /><span>{address ? address.street : 'Укажите адрес доставки'}</span><ArrowRight size={17} /></button></div>
         <div className="date-toolbar"><div className="date-tabs" aria-label="День доставки">{cart.days.map((day) => <button type="button" key={day.value} className={`date-tab ${cart.date === day.value ? 'active' : ''}`} aria-pressed={cart.date === day.value} onClick={() => cart.setDate(day.value)} aria-label={day.full}><span>{day.short}</span><strong>{day.number}</strong></button>)}{!cart.ready && <span className="date-loading">Загружаем ближайшие дни…</span>}</div><button className="week-button" aria-label="На неделю" disabled={!cart.ready} onClick={() => setModal('week')}><CalendarDays size={19} /><span>На неделю</span><ArrowRight size={16} /></button><p className="menu-inclusion"><CheckIcon /> В каждом обеде 3 блюда</p></div>
         <p className="daily-menu-caption">Каждый день — новое меню{cart.ready && <> · {dailyMeals.length} обеда на выбор</>}</p>
-        <div className={`meal-grid ${dailyMeals.length === 2 ? 'meal-grid--two' : ''}`}>{dailyMeals.map((entry) => <MealCard key={entry.id} meal={entry} quantity={cart.items.find((item) => item.date === cart.date && item.mealId === entry.id)?.quantity ?? 0} onOpen={() => setProduct(entry.id)} onAdd={() => { if (cart.ready) add(entry.id); }} onRemove={() => cart.change({ mealId: entry.id, date: cart.date }, -1)} />)}</div>
+        <div className={`meal-grid ${dailyMeals.length === 2 ? 'meal-grid--two' : ''}`}>{dailyMeals.map((entry, index) => <MealCard key={entry.id} wide={dailyMeals.length === 2} eager={index === 0} meal={entry} quantity={cart.items.find((item) => item.date === cart.date && item.mealId === entry.id)?.quantity ?? 0} onOpen={() => setProduct(entry.id)} onAdd={() => { if (cart.ready) add(entry.id); }} onRemove={() => cart.change({ mealId: entry.id, date: cart.date }, -1)} />)}</div>
         <div className="menu-bottom-note"><PackageCheck size={18} /><span>Один комплект — полноценный обед. Останется только сделать перерыв.</span></div>
         {cart.storageNotice && <p className="form-note" role="status">{cart.storageNotice}</p>}
         <WeeklyOffer disabled={!cart.ready} onChoose={() => setModal('week')} />

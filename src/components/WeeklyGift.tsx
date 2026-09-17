@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { FoodImage } from './FoodImage';
 import { ArrowRight, Gift } from 'lucide-react';
 import { site } from '@/data/site';
 import { CartItem, weeklyGiftStatus } from '@/lib/order';
@@ -16,7 +16,7 @@ export function WeeklyOffer({ onChoose, disabled }: { onChoose: () => void; disa
         <small>Одна выпечка на заказ. На фото — пример подарка.</small>
       </div>
       <div className="weekly-offer-photo">
-        <Image src={gift.image} alt={gift.imageAlt} width={900} height={600} sizes="(max-width: 700px) 90vw, 550px" />
+        <FoodImage src={gift.image} alt={gift.imageAlt} width={900} height={600} sizes="(max-width: 700px) 360px, 590px" />
         <span className="gift-stamp">С заботой<br /><strong>о вас</strong></span>
       </div>
     </section>
@@ -27,7 +27,7 @@ export function WeeklyGiftCard({ items }: { items: readonly Pick<CartItem, 'date
   const { days, eligible } = weeklyGiftStatus(items);
   return (
     <div className={`gift-card ${eligible ? 'gift-card--earned' : ''}`}>
-      <div className="gift-card-photo"><Image src={gift.image} alt={gift.imageAlt} width={135} height={108} /></div>
+      <div className="gift-card-photo"><FoodImage src={gift.image} alt={gift.imageAlt} width={135} height={108} sizes="160px" /></div>
       <div className="gift-card-copy" role="status" aria-live="polite" aria-atomic="true">
         <span className="gift-kicker"><Gift size={14} aria-hidden="true" /> {eligible ? 'ВАШ ПОДАРОК' : 'БОНУС ЗА НЕДЕЛЮ'}</span>
         <h3>{gift.name}</h3>

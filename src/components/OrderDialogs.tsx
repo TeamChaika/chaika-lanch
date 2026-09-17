@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { FoodImage } from './FoodImage';
 import { FormEvent, useState } from 'react';
 import { ArrowRight, CalendarDays, Check, CheckCircle2, ChevronDown, CreditCard, MapPin, ShoppingBag, Trash2, Truck } from 'lucide-react';
 import { findMeal, Meal, mealsForDate, money } from '@/data/menu';
@@ -16,7 +16,7 @@ export function ProductDialog({ meal, date, onAdd, onClose }: Close & { meal: Me
   const [quantity, setQuantity] = useState(1);
   return <Dialog title="Состав обеда" onClose={onClose}>
     <div className="dialog-scroll product-scroll">
-      <Image src={meal.image} alt={meal.description} width={1000} height={667} className="product-hero" />
+      <FoodImage src={meal.image} alt={meal.description} width={1000} height={667} className="product-hero" eager sizes="(max-width: 700px) 100vw, 620px" />
       <div className="dialog-content">
         <span className="eyebrow">{meal.tag}</span><h3 className="product-heading">{meal.name}</h3>
         <p className="muted">Полный обед · {meal.dishes.reduce((sum, dish) => sum + dish.weight, 0)} г</p>
@@ -60,7 +60,7 @@ export function WeekDialog({ days, onAdd, onClose }: Close & { days: DeliveryDay
       <WeeklyGiftCard items={selected.map((day) => ({ date: day.value, quantity: 1 }))} />
       <div className="week-list">{days.map((day) => { const meal = findMeal(selection[day.value]); return <div className={`week-row ${!meal ? 'week-row-skipped' : ''}`} key={day.value}>
         <div className="week-date"><span>{day.short}</span><strong>{day.number}</strong></div>
-        {meal ? <Image src={meal.image} alt="" width={80} height={80} /> : <CalendarDays size={35} className="muted" />}
+        {meal ? <FoodImage src={meal.image} alt="" width={80} height={80} sizes="100px" /> : <CalendarDays size={35} className="muted" />}
         <label className="week-select"><span className="sr-only">Обед на {day.full}</span><select value={selection[day.value]} onChange={(event) => setSelection((current) => ({ ...current, [day.value]: event.target.value }))}>{mealsForDate(day.value).map((option) => <option key={option.id} value={option.id}>{option.name} · {money(option.price)}</option>)}<option value="">Пропустить день</option></select></label>
       </div>; })}</div>
       <div className="soft-note"><Truck size={20} /><span>Доставка рассчитывается отдельно для каждого дня.</span></div>
@@ -76,7 +76,7 @@ export function CartDialog({ items, city, address, onChange, onRemove, onCheckou
       <div className="dialog-content dialog-scroll"><div className="soft-note cart-address"><MapPin size={19} /><span>{city}{address ? `, ${address.street}` : ' · адрес при оформлении'}</span></div>
         <WeeklyGiftCard items={items} />
         <div className="cart-items">{items.map((item) => { const meal = findMeal(item.mealId)!; return <article className="cart-item" key={itemKey(item)}>
-          <Image src={meal.image} alt={meal.description} width={120} height={120} />
+          <FoodImage src={meal.image} alt={meal.description} width={120} height={120} sizes="180px" />
           <div className="cart-item-info"><span className="cart-date">{formatDate(item.date)}</span><h3>{meal.name}</h3><p className="muted">{money(meal.price)} за обед</p><div className="cart-item-bottom"><Quantity value={item.quantity} label={`${meal.name}, ${formatDate(item.date)}`} onDecrease={() => onChange(item, -1)} onIncrease={() => onChange(item, 1)} /><strong>{money(meal.price * item.quantity)}</strong></div></div>
           <button className="icon-button remove-item" aria-label={`Удалить ${meal.name}, ${formatDate(item.date)}`} onClick={() => onRemove(item)}><Trash2 size={17} /></button>
         </article>; })}</div>
