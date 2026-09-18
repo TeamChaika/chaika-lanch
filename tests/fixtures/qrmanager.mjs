@@ -16,7 +16,7 @@ const server = createServer(async (req, res) => {
   }
   if (req.url?.startsWith('/inspect/')) return res.end(JSON.stringify(operations.get(req.url.split('/')[2]) || {}));
   if (req.headers['x-api-key'] !== 'local-fixture-key') { res.statusCode = 403; return res.end('{}'); }
-  if (req.url === '/users/check-api-key/') return res.end(JSON.stringify({ merchant_id: 'fixture', firm_name: 'Локальная компания', qrt_name: 'Локальный терминал', qrt_is_b2c: true, requires_receipt: mode !== 'no-receipt', is_nomenclature: false }));
+  if (req.url === '/users/check-api-key/') return res.end(JSON.stringify({ merchant_id: 'fixture', firm_name: 'Локальная компания', qrt_name: 'Локальный терминал', qrt_is_b2c: true, requires_receipt: mode !== 'no-receipt', is_nomenclature: false, subscription_end_date: mode === 'expired-terminal' ? '2000-01-01' : '2099-12-31' }));
   if (req.url === '/operations/qr-code/') {
     count++;
     const body = JSON.parse(input);

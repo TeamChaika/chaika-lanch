@@ -68,7 +68,10 @@ export async function checkMerchant(mode: PaymentMode) {
   const { host, key } = providerConfig(mode);
   const response = await fetch(`${host}/users/check-api-key/`, { headers: { 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
   if (!response.ok) throw new HttpError(503, 'Не удалось проверить платёжный терминал. Оплата временно недоступна.');
-  const merchant = z.object({ merchant_id: z.string().min(1), firm_name: z.string().min(1), qrt_name: z.string(), qrt_is_b2c: z.boolean(), vat: z.string().optional(), requires_receipt: z.boolean(), is_nomenclature: z.boolean().optional() }).parse(JSON.parse(Buffer.from(await limitedBody(response, 16000)).toString()));
+  const merchant = z.object({ merchant_id: z.string().min(1), firm_name: z.string().min(1), qrt_name: z.string(), qrt_is_b2c: z.boolean(), vat: z.string().optional(), requires_receipt: z.boolean(), is_nomenclature: z.boolean().optional(), subscription_end_date: z.string().nullish() }).parse(JSON.parse(Buffer.from(await limitedBody(response, 16000)).toString()));
   if (!merchant.qrt_is_b2c || (mode === 'live' && /тестовая компания/i.test(merchant.firm_name))) throw new HttpError(503, 'Терминал не готов к приёму оплаты покупателей.');
+  const endDate = z.iso.date().safeParse(merchant.subscription_end_date);
+  const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Simferopol' }).format(new Date());
+  if (mode === 'live' && endDate.success && endDate.data < today) throw new HttpError(503, 'Оплата временно недоступна. Пожалуйста, попробуйте позже.');
   return merchant;
 }

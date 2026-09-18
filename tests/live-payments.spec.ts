@@ -81,6 +81,14 @@ test('terminal without fiscalization receives no email or receipt lines', async 
   expect(provider).not.toHaveProperty('customer_email'); expect(provider).not.toHaveProperty('nomenclature');
 });
 
+test('expired terminal blocks creation before provider POST', async ({ request }) => {
+  await mode(request, 'expired-terminal'); const data = await input(request);
+  const response = await create(request, data); expect(response.status()).toBe(503);
+  expect((await response.json()).error).toContain('Оплата временно недоступна');
+  expect((await (await request.get(`${fixture}/control`)).json()).count).toBe(0);
+  expect((await request.get(`/api/payments/${data.id}`)).status()).toBe(404);
+});
+
 test('provider rejection is visible only to owner with secret redacted', async ({ request }) => {
   await mode(request, 'provider-error'); const data = await input(request);
   const payment = await (await create(request, data)).json();
