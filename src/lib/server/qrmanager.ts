@@ -37,31 +37,45 @@ export async function createQr(input: { sum: number; payment_purpose: string; no
 }
 
 const statusResult = z.object({ results: z.object({ operation_status_code: z.number().int(), operation_sum: z.number().int().nonnegative() }) });
-export function parseStatus(value: unknown) { return statusResult.parse(value).results; }
+export function parseStatus(value: unknown) {
+  const parsed = statusResult.safeParse(value);
+  if (!parsed.success) {
+    // Report only schema paths, never provider values, URLs or customer information.
+    const fields = parsed.error.issues.map(issue => issue.path.join('.')).join(', ').slice(0, 200);
+    throw new ProviderError('unknown', `QR Manager status: invalid fields (${fields})`);
+  }
+  return parsed.data.results;
+}
 export async function readQrStatus(operationId: string, mode: PaymentMode = 'sandbox') {
   z.uuid().parse(operationId);
   const { host, key } = providerConfig(mode);
-  const response = await fetch(`${host}/api/v2/sse-operations/${operationId}/qr-status/`, { headers: { Accept: 'text/event-stream, application/json', 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
-  if (!response.ok) throw new ProviderError('unknown');
-  if (response.headers.get('content-type')?.includes('application/json')) return parseStatus(JSON.parse(Buffer.from(await limitedBody(response, 32000)).toString()));
-  const reader = response.body?.getReader();
-  if (!reader) throw new ProviderError('unknown');
-  const decoder = new TextDecoder(); let buffer = ''; let size = 0;
   try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) throw new ProviderError('unknown');
-      size += value.length;
-      if (size > 64000) throw new ProviderError('unknown');
-      buffer += decoder.decode(value, { stream: true }).replace(/\r/g, '');
-      let end: number;
-      while ((end = buffer.indexOf('\n\n')) !== -1) {
-        const event = buffer.slice(0, end); buffer = buffer.slice(end + 2);
-        const data = event.split('\n').filter((line) => line.startsWith('data:')).map((line) => line.slice(5).trimStart()).join('\n');
-        if (data) return parseStatus(JSON.parse(data));
+    const response = await fetch(`${host}/api/v2/sse-operations/${operationId}/qr-status/`, { headers: { Accept: 'text/event-stream, application/json', 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
+    if (!response.ok) throw new ProviderError('unknown', `QR Manager status: HTTP ${response.status}`);
+    if (response.headers.get('content-type')?.includes('application/json')) return parseStatus(JSON.parse(Buffer.from(await limitedBody(response, 32000)).toString()));
+    const reader = response.body?.getReader();
+    if (!reader) throw new ProviderError('unknown', 'QR Manager status: empty body');
+    const decoder = new TextDecoder(); let buffer = ''; let size = 0;
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) throw new ProviderError('unknown', 'QR Manager status: stream ended without status');
+        size += value.length;
+        if (size > 64000) throw new ProviderError('unknown', 'QR Manager status: response too large');
+        buffer += decoder.decode(value, { stream: true }).replace(/\r/g, '');
+        let end: number;
+        while ((end = buffer.indexOf('\n\n')) !== -1) {
+          const event = buffer.slice(0, end); buffer = buffer.slice(end + 2);
+          const data = event.split('\n').filter((line) => line.startsWith('data:')).map((line) => line.slice(5).trimStart()).join('\n');
+          if (data) return parseStatus(JSON.parse(data));
+        }
       }
-    }
-  } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+    } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+  } catch (error) {
+    if (error instanceof ProviderError) throw error;
+    const reason = error instanceof Error && ['TimeoutError', 'AbortError', 'SyntaxError', 'TypeError'].includes(error.name) ? error.name : 'unavailable';
+    throw new ProviderError('unknown', `QR Manager status: ${reason}`);
+  }
 }
 
 export async function checkMerchant(mode: PaymentMode) {

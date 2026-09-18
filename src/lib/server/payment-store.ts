@@ -195,7 +195,10 @@ export async function refreshPayment(id: string, options: { mode?: PaymentMode; 
   catch (error) { if (error instanceof ConflictError) return publicPayment((await read(id, mode))!.value); throw error; }
   let status: Awaited<ReturnType<typeof readQrStatus>>;
   try { status = await readQrStatus(operationId, mode); }
-  catch { throw new HttpError(502, 'Платёж ещё не подтверждён. Продолжаем проверять; повторная оплата не требуется.'); }
+  catch (error) {
+    if (error instanceof ProviderError && error.diagnostic) await mutate(id, mode, (value) => value.state === 'paid' ? value : ({ ...value, reviewReason: error.diagnostic }));
+    throw new HttpError(502, 'Платёж ещё не подтверждён. Продолжаем проверять; повторная оплата не требуется.');
+  }
   if (status.operation_sum !== record.total * 100) {
     await mutate(id, mode, (value) => ({ ...value, reviewReason: 'Сумма в QR Manager не совпадает с заказом' }));
     throw new HttpError(502, 'Сумма операции требует проверки владельцем. Оплата не подтверждена.');
@@ -208,6 +211,7 @@ export async function refreshPayment(id: string, options: { mode?: PaymentMode; 
     // Late pending events never overwrite cancellation; verified payment may arrive after it.
     const state = terminal || (['cancelled', 'expired'].includes(value.state) ? value.state : 'pending');
     return { ...value, operationId, candidateOperationId: undefined, state, checkedAt: Date.now(), verifiedAt: Date.now(), verifiedVia: options.source || 'get',
+      ...(value.reviewReason?.startsWith('QR Manager status:') ? { reviewReason: undefined } : {}),
       ...(state === 'paid' ? { paidAt: value.paidAt || Date.now(), reviewReason: undefined } : {}) };
   });
   return publicPayment(saved);

@@ -34,6 +34,7 @@ const server = createServer(async (req, res) => {
   const operation = operations.get(id);
   if (operation) {
     if (operation.mode === 'webhook-get-failure') { res.statusCode = 503; return res.end('{}'); }
+    if (operation.mode === 'status-malformed') return res.end(JSON.stringify({ results: { operation_status_code: 'local-fixture-key', operation_sum: 'private-customer@example.invalid' } }));
     const code = { paid: 5, cancelled: 6, expired: 8, pending: 3, 'sse-timeout': 0, mismatch: 5 }[operation.mode] ?? 5;
     res.setHeader('Content-Type', 'text/event-stream');
     res.write(': heartbeat\r\n\r\n');

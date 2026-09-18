@@ -100,6 +100,28 @@ test('provider rejection is visible only to owner with secret redacted', async (
   expect(reason).toContain('HTTP 400'); expect(reason).not.toContain('local-fixture-key');
 });
 
+test('status diagnostics stay private and clear after verified recovery', async ({ request }) => {
+  await mode(request, 'pending'); const data = await input(request);
+  const payment = await (await create(request, data)).json(); const provider = await sent(request, payment);
+  const operation = payment.paymentUrl.split('/').pop();
+  await owner(request);
+  const day = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Simferopol' }).format(new Date());
+  for (const [scenario, detail] of [['webhook-get-failure', 'HTTP 503'], ['status-malformed', 'invalid fields']]) {
+    await request.post(`${fixture}/update/${operation}`, { data: { mode: scenario } });
+    expect((await request.post(provider.notification_url, { data: { id: operation, operation_status_code: 5 } })).status()).toBe(502);
+    const publicView = await view(request, data.id);
+    expect(publicView.state).toBe('pending'); expect(publicView).not.toHaveProperty('reviewReason');
+    const inbox = await (await request.get(`/api/admin/orders?day=${day}&mode=live`)).json();
+    const reason = inbox.orders.find((order: { id: string }) => order.id === data.id).reviewReason;
+    expect(reason).toContain(detail); expect(reason).not.toContain('local-fixture-key'); expect(reason).not.toContain('private-customer');
+  }
+  await request.post(`${fixture}/update/${operation}`, { data: { mode: 'pending' } });
+  expect((await request.post(provider.notification_url, { data: { id: operation, operation_status_code: 5 } })).ok()).toBeTruthy();
+  const inbox = await (await request.get(`/api/admin/orders?day=${day}&mode=live`)).json();
+  const recovered = inbox.orders.find((order: { id: string }) => order.id === data.id);
+  expect(recovered.state).toBe('pending'); expect(recovered.verifiedAt).toBeTruthy(); expect(recovered.reviewReason).toBeUndefined();
+});
+
 test('worker retains webhook UUID when creation response and first GET fail', async ({ request }) => {
   await mode(request, 'webhook-get-failure'); const data = await input(request);
   expect((await (await create(request, data)).json()).state).toBe('unknown');
