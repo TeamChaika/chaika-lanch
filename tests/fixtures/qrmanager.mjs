@@ -20,6 +20,7 @@ const server = createServer(async (req, res) => {
   if (req.url === '/operations/qr-code/') {
     count++;
     const body = JSON.parse(input);
+    if (body.payment_purpose.includes('·')) { res.statusCode = 400; return res.end(JSON.stringify({ payment_purpose: ['Назначение платежа содержит недопустимые символы.'] })); }
     if (mode === 'provider-error') { res.statusCode = 400; return res.end(JSON.stringify(['Cannot assign terminal: database router; key=' + req.headers['x-api-key']])); }
     if (mode === 'malformed') return res.end('{}');
     const id = randomUUID(); operations.set(id, { ...body, mode });

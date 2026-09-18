@@ -150,7 +150,8 @@ export async function createPayment(input: unknown, origin: string) {
   await writeObject(queueKey(record.id, mode), JSON.stringify({ id: record.id }), { expected: null });
   let result: Awaited<ReturnType<typeof createQr>>;
   try {
-    result = await createQr({ sum: total * 100, payment_purpose: `Чайка Обеды · ${mode === 'sandbox' ? 'ТЕСТ · ' : ''}${data.id}`,
+    // QRM's live validator rejects the decorative middle dot used in the interface.
+    result = await createQr({ sum: total * 100, payment_purpose: `Chaika Obedy ${mode === 'sandbox' ? 'TEST ' : ''}${data.id.replaceAll('-', '')}`,
       redirect_url: `${origin}/payment/${data.id}`, notification_url: `${origin}/api/payments/${data.id}/webhook?mode=${mode}&token=${webhookToken(data.id, mode)}`,
       ...(customer && merchant?.requires_receipt ? { customer_email: customer.email } : {}),
       ...(mode === 'sandbox' || merchant?.requires_receipt || merchant?.is_nomenclature ? { nomenclature: [...items.map((item) => ({ name: `${item.name} · ${item.date}`.slice(0, 100), count: item.quantity, price: item.price * 100, amount: item.price * item.quantity * 100, ...(mode === 'live' ? { payment_method: 1 } : {}) })),
