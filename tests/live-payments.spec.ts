@@ -110,7 +110,7 @@ test('checkout, WebSocket webhook update, owner acceptance work on phones and de
   await dialog.getByLabel('Улица и дом', { exact: true }).fill(customer.address.street);
   await dialog.getByLabel('Имя', { exact: true }).fill(customer.name);
   await dialog.getByLabel('Телефон', { exact: true }).fill('+7 999 000 00 00');
-  await dialog.getByLabel('Email для чека').fill(customer.email);
+  await dialog.getByLabel('Электронная почта').fill(customer.email);
   const frames: string[] = [];
   page.on('websocket', (socket) => { if (socket.url().includes('/api/payments/ws')) socket.on('framereceived', (event) => frames.push(String(event.payload))); });
   await dialog.getByRole('button', { name: 'Перейти к оплате', exact: true }).click();
