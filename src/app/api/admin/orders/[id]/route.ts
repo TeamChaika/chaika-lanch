@@ -8,6 +8,6 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     checkOrigin(request); await requireOwner();
     const { mode, action } = z.object({ mode: z.enum(['live', 'sandbox']), action: z.enum(['refresh', 'accepted', 'completed']) }).strict().parse(await readJson(request, 2000));
     const { id } = await context.params;
-    return json(action === 'refresh' ? await refreshPayment(id, { mode, source: 'owner' }) : publicPayment(await setFulfillment(id, mode, action)));
+    return json(action === 'refresh' ? await refreshPayment(id, { mode, source: 'owner', force: true }) : publicPayment(await setFulfillment(id, mode, action)));
   } catch (error) { return paymentFailure(error); }
 }

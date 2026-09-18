@@ -39,7 +39,7 @@ const server = createServer(async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.write(': heartbeat\r\n\r\n');
     const event = `data: ${JSON.stringify({ results: { operation_status_code: code, operation_sum: operation.sum + (operation.mode === 'mismatch' ? 1 : 0) } })}\r\n\r\n`;
-    res.write(event.slice(0, 18)); return setTimeout(() => res.end(event.slice(18)), 30);
+    res.write(event.slice(0, 18)); return setTimeout(() => res.end(event.slice(18)), operation.mode === 'slow-status' ? 11000 : 30);
   }
   res.statusCode = 404; res.end('{}');
 });

@@ -46,22 +46,24 @@ export function parseStatus(value: unknown) {
   }
   return parsed.data.results;
 }
-export async function readQrStatus(operationId: string, mode: PaymentMode = 'sandbox') {
+export async function readQrStatus(operationId: string, mode: PaymentMode = 'sandbox', timeoutMs = 10000) {
   z.uuid().parse(operationId);
   const { host, key } = providerConfig(mode);
+  let stage = 'awaiting response headers'; let receivedBytes = 0;
   try {
-    const response = await fetch(`${host}/api/v2/sse-operations/${operationId}/qr-status/`, { headers: { Accept: 'text/event-stream, application/json', 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
+    const response = await fetch(`${host}/api/v2/sse-operations/${operationId}/qr-status/`, { headers: { Accept: 'text/event-stream, application/json', 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(timeoutMs) });
+    stage = `reading HTTP ${response.status} body`;
     if (!response.ok) throw new ProviderError('unknown', `QR Manager status: HTTP ${response.status}`);
     if (response.headers.get('content-type')?.includes('application/json')) return parseStatus(JSON.parse(Buffer.from(await limitedBody(response, 32000)).toString()));
     const reader = response.body?.getReader();
     if (!reader) throw new ProviderError('unknown', 'QR Manager status: empty body');
-    const decoder = new TextDecoder(); let buffer = ''; let size = 0;
+    const decoder = new TextDecoder(); let buffer = '';
     try {
       while (true) {
         const { value, done } = await reader.read();
         if (done) throw new ProviderError('unknown', 'QR Manager status: stream ended without status');
-        size += value.length;
-        if (size > 64000) throw new ProviderError('unknown', 'QR Manager status: response too large');
+        receivedBytes += value.length;
+        if (receivedBytes > 64000) throw new ProviderError('unknown', 'QR Manager status: response too large');
         buffer += decoder.decode(value, { stream: true }).replace(/\r/g, '');
         let end: number;
         while ((end = buffer.indexOf('\n\n')) !== -1) {
@@ -74,7 +76,7 @@ export async function readQrStatus(operationId: string, mode: PaymentMode = 'san
   } catch (error) {
     if (error instanceof ProviderError) throw error;
     const reason = error instanceof Error && ['TimeoutError', 'AbortError', 'SyntaxError', 'TypeError'].includes(error.name) ? error.name : 'unavailable';
-    throw new ProviderError('unknown', `QR Manager status: ${reason}`);
+    throw new ProviderError('unknown', `QR Manager status: ${reason}; ${stage}; ${receivedBytes} bytes`);
   }
 }
 

@@ -122,6 +122,14 @@ test('status diagnostics stay private and clear after verified recovery', async 
   expect(recovered.state).toBe('pending'); expect(recovered.verifiedAt).toBeTruthy(); expect(recovered.reviewReason).toBeUndefined();
 });
 
+test('owner can wait for a slow status stream and verify its amount', async ({ request }) => {
+  await mode(request, 'slow-status'); const data = await input(request);
+  await create(request, data); await owner(request);
+  const response = await change(request, data.id, 'refresh');
+  expect(response.status()).toBe(200); const verified = await response.json();
+  expect(verified.state).toBe('paid'); expect(verified.verifiedAt).toBeTruthy();
+});
+
 test('worker retains webhook UUID when creation response and first GET fail', async ({ request }) => {
   await mode(request, 'webhook-get-failure'); const data = await input(request);
   expect((await (await create(request, data)).json()).state).toBe('unknown');

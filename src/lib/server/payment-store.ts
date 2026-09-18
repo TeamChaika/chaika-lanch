@@ -194,7 +194,7 @@ export async function refreshPayment(id: string, options: { mode?: PaymentMode; 
   try { await save({ ...record, checkedAt: Date.now() }, current.etag); }
   catch (error) { if (error instanceof ConflictError) return publicPayment((await read(id, mode))!.value); throw error; }
   let status: Awaited<ReturnType<typeof readQrStatus>>;
-  try { status = await readQrStatus(operationId, mode); }
+  try { status = await readQrStatus(operationId, mode, options.source === 'owner' ? 45000 : 10000); }
   catch (error) {
     if (error instanceof ProviderError && error.diagnostic) await mutate(id, mode, (value) => value.state === 'paid' ? value : ({ ...value, reviewReason: error.diagnostic }));
     throw new HttpError(502, 'Платёж ещё не подтверждён. Продолжаем проверять; повторная оплата не требуется.');
