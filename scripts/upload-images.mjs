@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import { Agent, request } from 'node:https';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 const root = new URL('../', import.meta.url);
@@ -13,12 +14,13 @@ const prefix = segments.join('/');
 if (url.protocol !== 'https:' || !bucket || prefix !== 'chaika-lanch') throw new Error('Expected a dedicated chaika-lanch prefix in image-hosting.json');
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) throw new Error('Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY for this upload process. Never commit credentials.');
 
+const httpsAgent = new Agent({ keepAlive: true, maxSockets: 4 });
 const client = new S3Client({
   endpoint: url.origin,
   region: 'ru-1',
   forcePathStyle: true,
   maxAttempts: 3,
-  requestHandler: { connectionTimeout: 10000, requestTimeout: 30000, throwOnRequestTimeout: true },
+  requestHandler: { httpsAgent, connectionTimeout: 10000, requestTimeout: 30000, throwOnRequestTimeout: true },
   requestChecksumCalculation: 'WHEN_REQUIRED',
   responseChecksumValidation: 'WHEN_REQUIRED',
 });
@@ -27,10 +29,19 @@ let count = 0;
 async function verifyPublicImage(url, expectedBytes) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(15000) });
-      if (!response.ok || response.headers.get('content-type') !== 'image/webp' || Number(response.headers.get('content-length')) !== expectedBytes) {
-        throw new Error(`Public image verification failed (${response.status}): ${url}`);
-      }
+      // Reuse the SDK's HTTPS pool; this HEAD deliberately has no credentials.
+      await new Promise((resolve, reject) => {
+        const req = request(url, { method: 'HEAD', agent: httpsAgent, signal: AbortSignal.timeout(15000) }, (response) => {
+          response.resume();
+          if (response.statusCode !== 200 || response.headers['content-type'] !== 'image/webp' || Number(response.headers['content-length']) !== expectedBytes) {
+            reject(new Error(`Public image verification failed (${response.statusCode}): ${url}`));
+          } else {
+            resolve();
+          }
+        });
+        req.on('error', reject);
+        req.end();
+      });
       return;
     } catch (error) {
       if (attempt === 2) throw error;
@@ -66,5 +77,6 @@ try {
   }
 } finally {
   client.destroy();
+  httpsAgent.destroy();
 }
 console.log(`Uploaded and publicly verified ${count} WebP files (${bytes.toLocaleString()} bytes) under ${hosting.baseUrl}/images/optimized/.`);
