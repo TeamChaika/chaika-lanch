@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useCatalog } from './MenuProvider';
 import { addItem, CartItem, deliveryWeeks, DeliveryWeek, itemKey, readSavedCart } from '@/lib/order';
 
 const STORAGE_KEY = 'chaika-lunch-cart-v1';
 
 export function useCart() {
+  const { catalog } = useCatalog();
   const [items, setItems] = useState<CartItem[]>([]);
   const [weeks, setWeeks] = useState<DeliveryWeek[]>([]);
   const days = weeks.flatMap((week) => week.days);
@@ -15,21 +17,21 @@ export function useCart() {
   const [storageNotice, setStorageNotice] = useState('');
 
   useEffect(() => {
-    // Browser-only hydration keeps the static preview deterministic.
+    // Resolve the local delivery date after hydration.
     const timer = window.setTimeout(() => {
-      const nextWeeks = deliveryWeeks();
+      const nextWeeks = deliveryWeeks(new Date(), catalog);
       const schedule = nextWeeks.flatMap((week) => week.days);
       setWeeks(nextWeeks);
       setDate(schedule[0].value);
       try {
-        setItems(readSavedCart(localStorage.getItem(STORAGE_KEY), schedule.map((day) => day.value)));
+        setItems(readSavedCart(localStorage.getItem(STORAGE_KEY), schedule.map((day) => day.value), catalog));
       } catch {
         setStorageNotice('Корзина работает в этой вкладке. Сохранение в браузере недоступно.');
       }
       setReady(true);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [catalog]);
 
   useEffect(() => {
     if (!ready) return;
@@ -44,7 +46,7 @@ export function useCart() {
 
   function add(mealId: string, targetDate = date, quantity = 1) {
     if (!days.some((day) => day.value === targetDate)) return;
-    setItems((current) => Array.from({ length: quantity }).reduce<CartItem[]>((cart) => addItem(cart, mealId, targetDate), current));
+    setItems((current) => Array.from({ length: quantity }).reduce<CartItem[]>((cart) => addItem(cart, mealId, targetDate, catalog), current));
   }
 
   function change(item: Pick<CartItem, 'mealId' | 'date'>, delta: number) {
@@ -56,7 +58,7 @@ export function useCart() {
   }
 
   function addWeek(selection: { date: string; mealId: string }[]) {
-    setItems((current) => selection.filter((choice) => days.some((day) => day.value === choice.date)).reduce((cart, choice) => addItem(cart, choice.mealId, choice.date), current));
+    setItems((current) => selection.filter((choice) => days.some((day) => day.value === choice.date)).reduce((cart, choice) => addItem(cart, choice.mealId, choice.date, catalog), current));
   }
 
   return { items, days, weeks, activeWeek, date, setDate, ready, storageNotice, add, change, remove, addWeek, clear: () => setItems([]) };

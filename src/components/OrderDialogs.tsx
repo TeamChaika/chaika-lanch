@@ -3,11 +3,12 @@
 import { FoodImage } from './FoodImage';
 import { FormEvent, useState } from 'react';
 import { ArrowRight, CalendarDays, Check, CheckCircle2, CreditCard, MapPin, ShoppingBag, Trash2, Truck } from 'lucide-react';
-import { findMeal, Meal, mealsForDate, money } from '@/data/menu';
+import { Meal, money } from '@/data/menu';
 import { City, site } from '@/data/site';
-import { CartItem, cartTotal, DeliveryAddress, DeliveryDay, formatDate, itemKey, weeklyGiftStatus } from '@/lib/order';
+import { CartItem, DeliveryAddress, DeliveryDay, formatDate, itemKey, weeklyGiftStatus } from '@/lib/order';
 import { Dialog } from './Dialog';
 import { Quantity } from './MealCard';
+import { useCatalog } from './MenuProvider';
 import { WeeklyGiftCard, WeeklyGiftSummary } from './WeeklyGift';
 
 type Close = { onClose: () => void };
@@ -16,13 +17,14 @@ export function ProductDialog({ meal, date, onAdd, onClose }: Close & { meal: Me
   const [quantity, setQuantity] = useState(1);
   return <Dialog title="Состав обеда" onClose={onClose}>
     <div className="dialog-scroll product-scroll">
-      <FoodImage src={meal.image} alt="Пример подачи комплексного обеда Чайка" width={1000} height={667} className="product-hero" eager sizes="(max-width: 700px) 100vw, 620px" />
+      <FoodImage src={meal.image} variants={meal.imageVariants} alt="Пример подачи комплексного обеда Чайка" width={1000} height={667} className="product-hero" eager sizes="(max-width: 700px) 100vw, 620px" />
       <div className="dialog-content">
         <span className="eyebrow">{meal.tag}</span><h3 className="product-heading">{meal.name}</h3>
         <p className="muted">Полный обед · {meal.dishes.reduce((sum, dish) => sum + dish.weight, 0)} г</p>
+        {meal.description && <p className="muted">{meal.description}</p>}
         <h4>Что внутри</h4>
-        <ul className="dish-list">{meal.dishes.map((dish, index) => <li key={dish.name}><span className="dish-number">0{index + 1}</span><span><small className="dish-category">{dish.category}</small>{dish.name}</span><span className="muted">{dish.weight} г</span></li>)}</ul>
-        <p className="form-note">Горячее: основа 100 г, гарнир 150 г, соус 50 г. На фото — пример подачи; состав комплекса указан выше.</p>
+        <ul className="dish-list">{meal.dishes.map((dish, index) => <li key={index}><span className="dish-number">0{index + 1}</span><span><small className="dish-category">{dish.category}</small>{dish.name}</span><span className="muted">{dish.weight} г</span></li>)}</ul>
+        <p className="form-note">{meal.imageIsExample !== false ? "На фото — пример подачи; состав комплекса указан выше." : "Состав и вес порций указаны выше."}</p>
         <div className="soft-note"><CalendarDays size={19} /> {date ? formatDate(date) : 'Выберите день в меню'}</div>
       </div>
     </div>
@@ -49,6 +51,7 @@ export function AddressDialog({ city, address, onSave, onClose }: Close & { city
 }
 
 export function WeekDialog({ days, onAdd, onClose }: Close & { days: DeliveryDay[]; onAdd: (selection: { date: string; mealId: string }[]) => void }) {
+  const { findMeal, mealsForDate } = useCatalog();
   const [selection, setSelection] = useState<Record<string, string>>(() => Object.fromEntries(days.map((day, index) => {
     const options = mealsForDate(day.value);
     return [day.value, options[index % options.length]?.id ?? ''];
@@ -60,7 +63,7 @@ export function WeekDialog({ days, onAdd, onClose }: Close & { days: DeliveryDay
       <WeeklyGiftCard items={selected.map((day) => ({ date: day.value, quantity: 1 }))} />
       <div className="week-list">{days.map((day) => { const meal = findMeal(selection[day.value]); return <div className={`week-row ${!meal ? 'week-row-skipped' : ''}`} key={day.value}>
         <div className="week-date"><span>{day.short}</span><strong>{day.number}</strong></div>
-        {meal ? <FoodImage src={meal.image} alt="" width={80} height={80} sizes="100px" /> : <CalendarDays size={35} className="muted" />}
+        {meal ? <FoodImage src={meal.image} variants={meal.imageVariants} alt="" width={80} height={80} sizes="100px" /> : <CalendarDays size={35} className="muted" />}
         <label className="week-select"><span className="sr-only">Обед на {day.full}</span><select value={selection[day.value]} onChange={(event) => setSelection((current) => ({ ...current, [day.value]: event.target.value }))}>{mealsForDate(day.value).map((option) => <option key={option.id} value={option.id}>{option.name} · {money(option.price)}</option>)}<option value="">Пропустить день</option></select></label>
       </div>; })}</div>
       <div className="soft-note"><Truck size={20} /><span>Доставка рассчитывается отдельно для каждого дня.</span></div>
@@ -69,6 +72,7 @@ export function WeekDialog({ days, onAdd, onClose }: Close & { days: DeliveryDay
 }
 
 export function CartDialog({ items, city, address, onChange, onRemove, onCheckout, onClose }: Close & { items: CartItem[]; city: City; address: DeliveryAddress | null; onChange: (item: CartItem, delta: number) => void; onRemove: (item: CartItem) => void; onCheckout: () => void }) {
+  const { findMeal, cartTotal } = useCatalog();
   const dates = new Set(items.map((item) => item.date)).size;
   const delivery = address ? dates * site.deliveryFee : 0;
   return <Dialog title="Ваша корзина" onClose={onClose}>
@@ -76,7 +80,7 @@ export function CartDialog({ items, city, address, onChange, onRemove, onCheckou
       <div className="dialog-content dialog-scroll"><div className="soft-note cart-address"><MapPin size={19} /><span>{city}{address ? `, ${address.street}` : ' · адрес при оформлении'}</span></div>
         <WeeklyGiftCard items={items} />
         <div className="cart-items">{items.map((item) => { const meal = findMeal(item.mealId)!; return <article className="cart-item" key={itemKey(item)}>
-          <FoodImage src={meal.image} alt="Пример подачи комплексного обеда Чайка" width={120} height={120} sizes="180px" />
+          <FoodImage src={meal.image} variants={meal.imageVariants} alt="Пример подачи комплексного обеда Чайка" width={120} height={120} sizes="180px" />
           <div className="cart-item-info"><span className="cart-date">{formatDate(item.date)}</span><h3>{meal.name}</h3><p className="muted">{money(meal.price)} за обед</p><div className="cart-item-bottom"><Quantity value={item.quantity} label={`${meal.name}, ${formatDate(item.date)}`} onDecrease={() => onChange(item, -1)} onIncrease={() => onChange(item, 1)} /><strong>{money(meal.price * item.quantity)}</strong></div></div>
           <button className="icon-button remove-item" aria-label={`Удалить ${meal.name}, ${formatDate(item.date)}`} onClick={() => onRemove(item)}><Trash2 size={17} /></button>
         </article>; })}</div>
@@ -89,6 +93,7 @@ export function CartDialog({ items, city, address, onChange, onRemove, onCheckou
 export interface OrderPreview { name: string; address: DeliveryAddress; slot: string; payment: string; items: CartItem[]; total: number; delivery: number }
 
 export function CheckoutDialog({ items, city, address, onConfirm, onBack, onClose }: Close & { items: CartItem[]; city: City; address: DeliveryAddress | null; onConfirm: (order: OrderPreview) => void; onBack: () => void }) {
+  const { cartTotal } = useCatalog();
   const [payment, setPayment] = useState('Картой');
   const [error, setError] = useState('');
   const dates = [...new Set(items.map((item) => item.date))].sort();
@@ -120,6 +125,7 @@ export function CheckoutDialog({ items, city, address, onConfirm, onBack, onClos
 }
 
 export function ConfirmationDialog({ order, onClose }: Close & { order: OrderPreview }) {
+  const { findMeal } = useCatalog();
   return <Dialog title="Подтверждение" onClose={onClose}><div className="dialog-content dialog-scroll confirmation">
     <CheckCircle2 size={58} strokeWidth={1.5} /><h3>Демо-заказ собран</h3><p className="muted">{order.name}, так будет выглядеть подтверждение вашего заказа. Ничего не отправлено, оплата не списывалась.</p>
     {weeklyGiftStatus(order.items).eligible && <WeeklyGiftCard items={order.items} />}
@@ -130,9 +136,10 @@ export function ConfirmationDialog({ order, onClose }: Close & { order: OrderPre
 }
 
 export function BusinessDialog({ city, onClose }: Close & { city: City }) {
+  const { startingPrice } = useCatalog();
   const [count, setCount] = useState(10);
   const [submitted, setSubmitted] = useState(false);
   return <Dialog title="Обеды для вашей команды" onClose={onClose}><div className="dialog-content dialog-scroll">
-    {!submitted ? <form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><p className="muted">Посмотрите пример стоимости питания команды. Доставка рассчитывается отдельно.</p><label className="field">Город<select defaultValue={city}>{site.cities.map((value) => <option key={value}>{value}</option>)}</select></label><label className="field">Количество сотрудников<input type="number" value={count} min={1} max={500} onChange={(event) => setCount(Number(event.target.value))} required /></label><div className="business-estimate"><span>За один рабочий день</span><strong>{money(Math.max(0, count) * site.mealPrice)}</strong><span>Из расчёта {money(site.mealPrice)} за обед</span></div><div className="demo-notice">Это предварительный расчёт в макете. Заявка никуда не отправляется.</div><button type="submit" className="button button-primary full-width">Составить заявку <ArrowRight size={18} /></button></form> : <div className="business-result"><Check size={36} /><h3>Основа заявки готова</h3><p>Обеды для {count} сотрудников. Следующий шаг — согласовать дни, адрес и состав меню с вашей командой.</p><p className="muted">Для реальных заявок подключите форму к вашей системе заказов.</p><button className="button button-primary" onClick={onClose}>Понятно</button></div>}
+    {!submitted ? <form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><p className="muted">Посмотрите пример стоимости питания команды. Доставка рассчитывается отдельно.</p><label className="field">Город<select defaultValue={city}>{site.cities.map((value) => <option key={value}>{value}</option>)}</select></label><label className="field">Количество сотрудников<input type="number" value={count} min={1} max={500} onChange={(event) => setCount(Number(event.target.value))} required /></label><div className="business-estimate"><span>За один рабочий день</span><strong>{money(Math.max(0, count) * startingPrice)}</strong><span>Из расчёта {money(startingPrice)} за обед</span></div><div className="demo-notice">Это предварительный расчёт в макете. Заявка никуда не отправляется.</div><button type="submit" className="button button-primary full-width">Составить заявку <ArrowRight size={18} /></button></form> : <div className="business-result"><Check size={36} /><h3>Основа заявки готова</h3><p>Обеды для {count} сотрудников. Следующий шаг — согласовать дни, адрес и состав меню с вашей командой.</p><p className="muted">Для реальных заявок подключите форму к вашей системе заказов.</p><button className="button button-primary" onClick={onClose}>Понятно</button></div>}
   </div></Dialog>;
 }

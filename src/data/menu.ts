@@ -1,14 +1,17 @@
-import type imageManifest from './image-manifest.json';
 import monthlyMenu from './monthly-menu.json';
 import { site } from './site';
 
 export interface Dish { name: string; weight: number; category: string }
+export interface ImageVariant { width: number; height: number; path: string; bytes: number }
 export interface Meal {
   id: string;
   name: string;
   description: string;
   price: number;
-  image: keyof typeof imageManifest;
+  image: string;
+  imageVariants?: ImageVariant[];
+  imageIsExample?: boolean;
+  enabled?: boolean;
   tag: string;
   week: number;
   weekday: number;
@@ -38,21 +41,32 @@ export const meals: Meal[] = monthlyMenu.map((entry) => ({
 }));
 
 const DAY_MS = 86_400_000;
-export function menuWeekForDate(date: string): number | null {
+export interface MenuCatalog {
+  schemaVersion: 1;
+  revision: string;
+  updatedAt: string | null;
+  cycleStartsOn: string;
+  closedDays: string[];
+  meals: Meal[];
+}
+export const defaultCatalog: MenuCatalog = { schemaVersion: 1, revision: 'initial', updatedAt: null, cycleStartsOn: site.menuCycleStartsOn, closedDays: [], meals };
+
+export function menuWeekForDate(date: string, catalog: MenuCatalog = defaultCatalog): number | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
   const timestamp = Date.parse(`${date}T12:00:00Z`);
   if (!Number.isFinite(timestamp) || new Date(timestamp).toISOString().slice(0, 10) !== date) return null;
-  const elapsedDays = Math.floor((timestamp - Date.parse(`${site.menuCycleStartsOn}T12:00:00Z`)) / DAY_MS);
+  const elapsedDays = Math.floor((timestamp - Date.parse(`${catalog.cycleStartsOn}T12:00:00Z`)) / DAY_MS);
   if (elapsedDays < 0) return null;
   return Math.floor(elapsedDays / 7) % 4 + 1;
 }
 
-export function mealsForDate(date: string): Meal[] {
-  const week = menuWeekForDate(date);
+export function mealsForDate(date: string, catalog: MenuCatalog = defaultCatalog): Meal[] {
+  const week = menuWeekForDate(date, catalog);
   if (week === null) return [];
   const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
-  return meals.filter((meal) => meal.week === week && meal.weekday === weekday);
+  if (catalog.closedDays.includes(`${week}-${weekday}`)) return [];
+  return catalog.meals.filter((meal) => meal.enabled !== false && meal.week === week && meal.weekday === weekday);
 }
-export const isMealAvailable = (mealId: string, date: string) => mealsForDate(date).some((meal) => meal.id === mealId);
-export const findMeal = (id: string) => meals.find((meal) => meal.id === id);
+export const isMealAvailable = (mealId: string, date: string, catalog: MenuCatalog = defaultCatalog) => mealsForDate(date, catalog).some((meal) => meal.id === mealId);
+export const findMeal = (id: string, catalog: MenuCatalog = defaultCatalog) => catalog.meals.find((meal) => meal.id === id);
 export const money = (amount: number) => `${new Intl.NumberFormat('ru-RU').format(amount)} ₽`;

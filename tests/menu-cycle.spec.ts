@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { isMealAvailable, meals, mealsForDate, menuWeekForDate } from '../src/data/menu';
-import { addItem, deliveryWeeks, readSavedCart } from '../src/lib/order';
+import { defaultCatalog, isMealAvailable, meals, mealsForDate, menuWeekForDate } from '../src/data/menu';
+import { addItem, cartTotal, deliveryWeeks, readSavedCart } from '../src/lib/order';
 import { site } from '../src/data/site';
 
 test('source menu has twenty complete complexes at the agreed price', () => {
@@ -50,4 +50,24 @@ test('cart drops obsolete demo products, wrong weeks, past dates and duplicate e
     { mealId: 'week-1-day-1', date: '2026-10-19', quantity: 1 }];
   expect(readSavedCart(JSON.stringify(saved), allowed)).toEqual([valid]);
   expect(addItem([], 'week-1-day-1', '2026-09-28')).toEqual([]);
+});
+
+
+test('published catalog controls custom dates, prices, hidden days and removed positions', () => {
+  const catalog = structuredClone(defaultCatalog);
+  catalog.cycleStartsOn = '2026-10-05';
+  catalog.meals[0].price = 615;
+  const item = { mealId: catalog.meals[0].id, date: '2026-10-05', quantity: 2 };
+  expect(deliveryWeeks(new Date('2026-09-21'), catalog)[0].value).toBe('2026-10-05');
+  expect(mealsForDate('2026-10-05', catalog)[0].price).toBe(615);
+  expect(cartTotal([item], catalog)).toBe(1230);
+  catalog.closedDays = ['1-1'];
+  expect(mealsForDate('2026-10-05', catalog)).toEqual([]);
+  expect(readSavedCart(JSON.stringify([item]), [item.date], catalog)).toEqual([]);
+  expect(addItem([], item.mealId, item.date, catalog)).toEqual([]);
+  catalog.closedDays = [];
+  catalog.meals[0].enabled = false;
+  expect(mealsForDate(item.date, catalog)).toEqual([]);
+  catalog.meals.splice(0, 1);
+  expect(readSavedCart(JSON.stringify([item]), [item.date], catalog)).toEqual([]);
 });

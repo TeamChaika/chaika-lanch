@@ -10,3 +10,5 @@ research/
 .env
 .env.*
 !.env.example
+
+.local-menu/

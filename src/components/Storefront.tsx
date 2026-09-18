@@ -3,19 +3,22 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowRight, CalendarDays, ChevronDown, Clock3, Heart, Leaf, MapPin, Menu, PackageCheck, ShoppingBag, Sparkles, Truck, Users, Utensils } from 'lucide-react';
-import { meals, mealsForDate, money } from '@/data/menu';
+import { money } from '@/data/menu';
 import { City, site } from '@/data/site';
-import { cartTotal, DeliveryAddress } from '@/lib/order';
+import { DeliveryAddress } from '@/lib/order';
 import { MealCard } from './MealCard';
 import { Dialog } from './Dialog';
 import { AddressDialog, BusinessDialog, CartDialog, CheckoutDialog, ConfirmationDialog, OrderPreview, ProductDialog, WeekDialog } from './OrderDialogs';
 import { useCart } from './useCart';
 import { WeeklyOffer } from './WeeklyGift';
 import { FoodImage } from './FoodImage';
+import { useCatalog } from './MenuProvider';
 
 type Modal = 'cart' | 'checkout' | 'confirmation' | 'address' | 'week' | 'business' | 'navigation' | null;
 
 export function Storefront() {
+  const { catalog, mealsForDate, cartTotal, startingPrice } = useCatalog();
+  const meals = catalog.meals;
   const cart = useCart();
   const [city, setCity] = useState<City>('Ялта');
   const [address, setAddress] = useState<DeliveryAddress | null>(null);
@@ -53,7 +56,7 @@ export function Storefront() {
     <main>
       <section className="hero container" aria-labelledby="hero-title">
         <div className="hero-image"><FoodImage src="/images/lunch-photo-007.webp" alt="Пример подачи обеда Чайка: горячее, суп, салат и напиток" width={1280} height={853} eager desktopOnly sizes="(max-width: 1000px) 75vw, (max-width: 1320px) 65vw, 806px" /></div>
-        <div className="hero-content"><span className="hero-kicker"><span /> Хороший день начинается с заботы</span><h1 id="hero-title"><span className="desktop-hero-title">Обед готов.<br />День свободен.</span><span className="mobile-hero-title">Что на обед?</span></h1><p>Готовые обеды в офис <span className="hero-price">{money(site.mealPrice)}</span></p><a className="button button-primary hero-button" href="#menu">Выбрать обед <ArrowDown size={18} /></a><div className="hero-bottom"><Utensils size={16} /><span>Салат, суп, горячее и компот</span></div></div>
+        <div className="hero-content"><span className="hero-kicker"><span /> Хороший день начинается с заботы</span><h1 id="hero-title"><span className="desktop-hero-title">Обед готов.<br />День свободен.</span><span className="mobile-hero-title">Что на обед?</span></h1><p>Готовые обеды в офис от <span className="hero-price">{money(startingPrice)}</span></p><a className="button button-primary hero-button" href="#menu">Выбрать обед <ArrowDown size={18} /></a><div className="hero-bottom"><Utensils size={16} /><span>Салат, суп, горячее и компот</span></div></div>
       </section>
 
       <section id="menu" className="menu-section container" aria-labelledby="menu-title">
@@ -61,7 +64,8 @@ export function Storefront() {
         <div className="menu-weeks" role="group" aria-label="Неделя меню">{cart.weeks.map((week) => <button type="button" key={week.value} className={`menu-week ${cart.activeWeek?.value === week.value ? 'active' : ''}`} aria-pressed={cart.activeWeek?.value === week.value} onClick={() => cart.setDate(week.days[0].value)}><strong>Неделя {week.menuWeek}</strong><span>{week.label}</span></button>)}</div>
         <div className="date-toolbar"><div className="date-tabs" aria-label="День доставки">{(cart.activeWeek?.days ?? []).map((day) => <button type="button" key={day.value} className={`date-tab ${cart.date === day.value ? 'active' : ''}`} aria-pressed={cart.date === day.value} onClick={() => cart.setDate(day.value)} aria-label={day.full}><span>{day.short}</span><strong>{day.number}</strong></button>)}{!cart.ready && <span className="date-loading">Загружаем ближайшие дни…</span>}</div><button className="week-button" aria-label="На неделю" disabled={!cart.ready} onClick={() => setModal('week')}><CalendarDays size={19} /><span>На неделю</span><ArrowRight size={16} /></button><p className="menu-inclusion"><CheckIcon /> 3 блюда + компот</p></div>
         <p className="daily-menu-caption">Каждый день — новый комплекс · 4 недели разнообразного меню</p>
-        <div className="meal-grid meal-grid--single">{dailyMeals.map((entry, index) => <MealCard key={entry.id} eager={index === 0} meal={entry} quantity={cart.items.find((item) => item.date === cart.date && item.mealId === entry.id)?.quantity ?? 0} onOpen={() => setProduct(entry.id)} onAdd={() => { if (cart.ready) add(entry.id); }} onRemove={() => cart.change({ mealId: entry.id, date: cart.date }, -1)} />)}</div>
+        <div className={`meal-grid ${dailyMeals.length === 1 ? "meal-grid--single" : ""}`}>{dailyMeals.map((entry, index) => <MealCard key={entry.id} eager={index === 0} meal={entry} quantity={cart.items.find((item) => item.date === cart.date && item.mealId === entry.id)?.quantity ?? 0} onOpen={() => setProduct(entry.id)} onAdd={() => { if (cart.ready) add(entry.id); }} onRemove={() => cart.change({ mealId: entry.id, date: cart.date }, -1)} />)}</div>
+        {cart.ready && !dailyMeals.length && <p className="empty-state">На этот день обедов пока нет. Выберите другой день.</p>}
         <div className="menu-bottom-note"><PackageCheck size={18} /><span>Один комплект — полноценный обед. Останется только сделать перерыв.</span></div>
         {cart.storageNotice && <p className="form-note" role="status">{cart.storageNotice}</p>}
         <WeeklyOffer disabled={!cart.ready} onChoose={() => setModal('week')} />
@@ -71,7 +75,7 @@ export function Storefront() {
 
       <section id="delivery" className="delivery-section container" aria-labelledby="delivery-title"><div className="section-heading"><div><span className="eyebrow">ВСЁ ПРОСТО</span><h2 id="delivery-title">От выбора до обеда</h2></div><p>Три небольших шага.<br />И одна приятная пауза в вашем дне.</p></div><div className="steps"><article><span className="step-number">01</span><Utensils size={24} /><h3>Выберите обед</h3><p>Посмотрите состав и добавьте подходящий комплект. На один день или на несколько.</p></article><article><span className="step-number">02</span><MapPin size={24} /><h3>Укажите адрес</h3><p>Выберите город и удобный интервал. Итоговая сумма появится до подтверждения.</p></article><article><span className="step-number">03</span><Truck size={24} /><h3>Сделайте перерыв</h3><p>Обед уже выбран. Можно освободить время для себя и коллег.</p></article></div></section>
 
-      <section className="faq-section container" aria-labelledby="faq-title"><div><span className="eyebrow">ПОЛЕЗНО ЗНАТЬ</span><h2 id="faq-title">Перед первым <br />заказом</h2><Leaf className="faq-leaf" size={55} strokeWidth={1} /></div><div className="faq-list"><details><summary>Что входит в обед?<ChevronDown size={18} /></summary><p>Салат 100 г, суп 250 г, горячее с гарниром и соусом 300 г, компот 200 г. Всего 850 г за {money(site.mealPrice)}. Названия блюд и вес порций указаны в карточке.</p></details><details><summary>Можно заказать на несколько дней?<ChevronDown size={18} /></summary><p>Да. Нажмите «На неделю», выберите комплект для каждого дня и пропустите дни, когда доставка не нужна. Все выбранные даты появятся в корзине.</p></details><details><summary>Где будет работать доставка?<ChevronDown size={18} /></summary><p>Города запуска — Ялта, Севастополь и Симферополь. Точные зоны и интервалы необходимо подтвердить перед запуском сервиса.</p></details><details><summary>Как узнать стоимость доставки?<ChevronDown size={18} /></summary><p>Она показывается при оформлении отдельно от стоимости еды. В этой демонстрационной версии используется пример: 100 ₽ за каждый день доставки.</p></details></div></section>
+      <section className="faq-section container" aria-labelledby="faq-title"><div><span className="eyebrow">ПОЛЕЗНО ЗНАТЬ</span><h2 id="faq-title">Перед первым <br />заказом</h2><Leaf className="faq-leaf" size={55} strokeWidth={1} /></div><div className="faq-list"><details><summary>Что входит в обед?<ChevronDown size={18} /></summary><p>Состав, вес каждой порции и актуальная цена указаны в карточке выбранного комплекса.</p></details><details><summary>Можно заказать на несколько дней?<ChevronDown size={18} /></summary><p>Да. Нажмите «На неделю», выберите комплект для каждого дня и пропустите дни, когда доставка не нужна. Все выбранные даты появятся в корзине.</p></details><details><summary>Где будет работать доставка?<ChevronDown size={18} /></summary><p>Города запуска — Ялта, Севастополь и Симферополь. Точные зоны и интервалы необходимо подтвердить перед запуском сервиса.</p></details><details><summary>Как узнать стоимость доставки?<ChevronDown size={18} /></summary><p>Она показывается при оформлении отдельно от стоимости еды. В этой демонстрационной версии используется пример: 100 ₽ за каждый день доставки.</p></details></div></section>
     </main>
 
     <footer className="site-footer"><div className="container footer-top"><a href="#" className="logo" aria-label="На главную"><Image src={site.logo} alt={site.name} width={175} height={62} /></a><p>Обед готов.<br /><strong>День свободен.</strong></p><nav aria-label="Навигация в подвале"><a href="#menu">Меню</a><a href="#companies">Компаниям</a><a href="#delivery">Доставка</a></nav><span className="footer-cities">Ялта<br />Севастополь<br />Симферополь</span></div><div className="container footer-bottom"><span>© Чайка Обеды</span><span>Меню на 4 недели · оформление заказа в деморежиме</span><span><Sparkles size={13} /> Сделано с заботой</span></div></footer>
