@@ -509,3 +509,8 @@ details[open] > summary > svg { transform: rotate(180deg); }
 .payment-summary .summary-row > span:last-child { white-space: nowrap; }
 .payment-return { margin-top: 12px; }
 @media (max-width: 600px) { .payment-page { padding: 20px 14px 40px; } .payment-card { padding: 24px 18px; border-radius: 20px; } }
+
+/* Per-serving nutrition stays readable on narrow menu cards and dialogs. */
+.dish-nutrition { display: flex; flex-wrap: wrap; gap: 3px 10px; margin-top: 5px; color: #667068; font-size: 12px; line-height: 1.6; font-weight: 400; }
+.dish-nutrition > span { white-space: nowrap; }
+.dish-list > li > .muted { flex-shrink: 0; white-space: nowrap; }

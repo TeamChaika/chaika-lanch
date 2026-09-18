@@ -10,6 +10,8 @@ import { CartItem, DeliveryAddress, DeliveryDay, formatDate, itemKey, weeklyGift
 import { Dialog } from './Dialog';
 import { Quantity } from './MealCard';
 import { MealNutrition } from './MealNutrition';
+import { DishNutrition } from './DishNutrition';
+import { getMealNutrition } from '@/lib/nutrition';
 import { useCatalog } from './MenuProvider';
 import { WeeklyGiftCard, WeeklyGiftSummary } from './WeeklyGift';
 
@@ -26,9 +28,9 @@ export function ProductDialog({ meal, date, onAdd, onClose }: Close & { meal: Me
         <span className="eyebrow">{meal.tag}</span><h3 className="product-heading">{meal.name}</h3>
         <p className="muted">Полный обед · {meal.dishes.reduce((sum, dish) => sum + dish.weight, 0)} г</p>
         {meal.description && <p className="muted">{meal.description}</p>}
-        <MealNutrition value={meal.nutrition} />
+        <MealNutrition value={getMealNutrition(meal)} />
         <h4>Что внутри</h4>
-        <ul className="dish-list">{meal.dishes.map((dish, index) => <li key={index}><span className="dish-number">0{index + 1}</span><span><small className="dish-category">{dish.category}</small>{dish.name}</span><span className="muted">{dish.weight} г</span></li>)}</ul>
+        <ul className="dish-list">{meal.dishes.map((dish, index) => <li key={index}><span className="dish-number">0{index + 1}</span><span><small className="dish-category">{dish.category}</small>{dish.name}<DishNutrition value={dish.nutrition} /></span><span className="muted">{dish.weight} г</span></li>)}</ul>
         <p className="form-note">{meal.imageIsExample !== false ? "На фото — пример подачи; состав комплекса указан выше." : "Состав и вес порций указаны выше."}</p>
         <div className="soft-note"><CalendarDays size={19} /> {date ? formatDate(date) : 'Выберите день в меню'}</div>
       </div>

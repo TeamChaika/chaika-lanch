@@ -73,3 +73,10 @@
 .order-paid { color: #26713c; font-weight: 700; }
 .order-contact { display: grid; gap: 8px; margin: 18px 0; padding: 16px; background: #f8f5ef; border-radius: 12px; }
 .owner-order footer .button { width: 100%; }
+
+.admin-total-nutrition { margin-top: 22px; }
+.admin-total-nutrition .meal-nutrition { margin-top: 14px; }
+.admin-nutrition-help { color: #64756b; font-size: 12px; line-height: 1.6; }
+.admin-dish-item { border-bottom: 1px solid var(--admin-line); padding-bottom: 16px; margin-bottom: 20px; }
+.admin-dish-nutrition summary { cursor: pointer; color: #344e3d; font-size: 13px; padding: 8px 0; }
+.admin-dish-nutrition .admin-nutrition { margin-top: 10px; }

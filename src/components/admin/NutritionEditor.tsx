@@ -8,11 +8,11 @@ const fields = [
   { key: 'carbs', label: 'Углеводы, г', max: 1000 },
 ] as const;
 
-export function NutritionEditor({ value, onChange }: { value?: MealNutrition; onChange: (value: MealNutrition) => void }) {
+export function NutritionEditor({ value, onChange, portion }: { value?: MealNutrition; onChange: (value: MealNutrition) => void; portion?: number }) {
   const nutrition = value ?? empty;
   return <fieldset className="admin-nutrition">
-    <legend>КБЖУ обеда</legend>
-    <p>На весь комплекс с напитком, без подарочной выпечки. Заполните все четыре поля; пустые значения появятся на сайте как «Данные уточняются».</p>
+    <legend>{portion === undefined ? 'КБЖУ обеда' : 'КБЖУ блюда'}</legend>
+    <p>{portion === undefined ? 'На весь комплекс с напитком, без подарочной выпечки.' : `На порцию ${portion} г, не на 100 г.`} Заполните все четыре поля или оставьте все пустыми.</p>
     <div className="admin-nutrition-fields">{fields.map(field => <label className="field" key={field.key}>{field.label}
       <input type="number" inputMode="decimal" min={0} max={field.max} step="0.1" placeholder="Не указано" value={nutrition[field.key] ?? ''}
         onChange={event => onChange({ ...nutrition, [field.key]: event.target.value === '' ? null : Number(event.target.value) })} />

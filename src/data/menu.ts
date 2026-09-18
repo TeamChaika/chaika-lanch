@@ -1,7 +1,7 @@
 import monthlyMenu from './monthly-menu.json';
 import { site } from './site';
 
-export interface Dish { name: string; weight: number; category: string }
+export interface Dish { name: string; weight: number; category: string; nutrition?: MealNutrition }
 export interface ImageVariant { width: number; height: number; path: string; bytes: number }
 export interface MealNutrition {
   calories: number | null;
@@ -24,6 +24,7 @@ export interface Meal {
   weekday: number;
   dishes: Dish[];
   nutrition?: MealNutrition;
+  nutritionMode?: 'manual' | 'dishes';
 }
 
 // Serving examples from the supplied photo folder; not exact recipe photos.

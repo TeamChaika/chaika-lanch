@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import manifest from '@/data/image-manifest.json';
 import type { MenuCatalog } from '@/data/menu';
+import { getMealNutrition } from './nutrition';
 
 const text = (max: number) => z.string().trim().min(1, 'Заполните поле').max(max);
 const variant = z.object({
@@ -33,8 +34,9 @@ export const catalogSchema = z.object({
     image: z.string().max(200), imageVariants: z.array(variant).min(1).max(5).optional(),
     imageIsExample: z.boolean().optional(), enabled: z.boolean().optional(),
     tag: z.string().trim().max(80), week: z.number().int().min(1).max(4), weekday: z.number().int().min(1).max(5),
-    dishes: z.array(z.object({ category: text(50), name: text(300), weight: z.number().int().min(1).max(10000) }).strict()).min(1, 'Добавьте хотя бы одну позицию').max(12),
+    dishes: z.array(z.object({ category: text(50), name: text(300), weight: z.number().int().min(1).max(10000), nutrition: nutrition.optional() }).strict()).min(1, 'Добавьте хотя бы одну позицию').max(12),
     nutrition: nutrition.optional(),
+    nutritionMode: z.enum(['manual', 'dishes']).optional(),
   }).strict().superRefine((meal, ctx) => {
     if (Object.hasOwn(manifest, meal.image) && !meal.imageVariants) return;
     const match = /^\/images\/uploads\/([a-f0-9-]{36})\.webp$/.exec(meal.image);
@@ -45,4 +47,11 @@ export const catalogSchema = z.object({
 }).strict().superRefine((catalog, ctx) => {
   if (new Set(catalog.meals.map((meal) => meal.id)).size !== catalog.meals.length) ctx.addIssue({ code: 'custom', message: 'Идентификаторы комплексов повторяются', path: ['meals'] });
 });
-export function validateCatalog(input: unknown): MenuCatalog { return catalogSchema.parse(input); }
+export function validateCatalog(input: unknown): MenuCatalog {
+  const catalog = catalogSchema.parse(input);
+  return { ...catalog, meals: catalog.meals.map(meal => {
+    if (meal.nutritionMode !== 'dishes') return meal;
+    const total = getMealNutrition(meal);
+    return { ...meal, nutrition: total ? nutrition.parse(total) : undefined };
+  }) };
+}
