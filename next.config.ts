@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const config: NextConfig = {
+  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
   images: { unoptimized: true },
   turbopack: { root: process.cwd() },
   devIndicators: false,

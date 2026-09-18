@@ -1,0 +1,11 @@
+# Only build inputs are sent to Docker; local secrets and originals stay outside.
+**
+!package.json
+!package-lock.json
+!next.config.ts
+!tsconfig.json
+!next-env.d.ts
+!src
+!src/**
+!public
+!public/**
