@@ -447,3 +447,38 @@ details[open] > summary > svg { transform: rotate(180deg); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Four-week menu: full composition alongside a serving example. */
+.menu-weeks { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin: 0 0 20px; }
+.menu-week { background: transparent; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; text-align: left; color: var(--ink); }
+.menu-week strong, .menu-week span { display: block; }
+.menu-week strong { font-size: 14px; margin-bottom: 6px; }
+.menu-week span { font-size: 11px; color: var(--muted); }
+.menu-week.active { background: var(--sage); border-color: var(--ink); }
+.menu-week:hover { background: var(--sage); }
+.meal-grid--single { grid-template-columns: minmax(0,1fr); }
+.meal-grid--single .meal-card { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.meal-grid--single .meal-photo { height: 100%; min-height: 430px; aspect-ratio: auto; }
+.meal-grid--single .meal-card-body { padding: 28px; display: flex; flex-direction: column; }
+.meal-grid--single .meal-card-bottom { margin-top: auto; padding-top: 20px; }
+.meal-grid--single .meal-title { font-size: 27px; }
+.meal-composition { margin: 8px 0 0; padding: 0; list-style: none; }
+.meal-composition li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.5; }
+.meal-composition small, .dish-category { display: block; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 3px; }
+.dish-weight { flex-shrink: 0; white-space: nowrap; color: var(--muted); font-size: 12px; align-self: center; }
+.photo-caption { position: absolute; bottom: 16px; left: 16px; right: 16px; width: fit-content; padding: 7px 10px; background: rgba(255,255,255,.93); border-radius: 6px; font-size: 10px; color: var(--ink); }
+@media (max-width: 1000px) {
+  .menu-week { padding: 12px; }
+  .meal-grid--single .meal-card-body { padding: 20px; }
+  .meal-grid--single .meal-title { font-size: 24px; }
+}
+@media (max-width: 700px) {
+  .menu-weeks { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 16px; }
+  .menu-week span { font-size: 10px; }
+  .meal-grid--single .meal-card { display: block; }
+  .meal-grid--single .meal-photo { height: auto; min-height: 0; aspect-ratio: 1.5; }
+  .meal-grid--single .meal-card-body { padding: 19px; }
+  .meal-grid--single .meal-title { font-size: 24px; }
+  .meal-composition li { font-size: 12px; gap: 10px; }
+  .meal-grid--single .meal-meta > span + span { display: block; }
+}

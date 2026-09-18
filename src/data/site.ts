@@ -1,6 +1,9 @@
 // Для другого логотипа замените public/brand/logo.png или поменяйте путь здесь.
 export const site = {
   name: 'Чайка Обеды',
+  mealPrice: 550,
+  // Monday starting the first week of the repeating four-week menu.
+  menuCycleStartsOn: '2026-09-21',
   logo: '/brand/logo.png',
   cities: ['Ялта', 'Севастополь', 'Симферополь'],
   deliveryFee: 100,

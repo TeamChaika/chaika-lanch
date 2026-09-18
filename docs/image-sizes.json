@@ -252,6 +252,1356 @@
     ]
   },
   {
+    "image": "lunch-photo-001",
+    "originalBytes": 85624,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-001-160-dc5d61a891a0.webp",
+        "bytes": 4398
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-001-320-f770ef40b44d.webp",
+        "bytes": 14600
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-001-640-1a6cf22456e4.webp",
+        "bytes": 46148
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-001-670-8f6fef2f94dc.webp",
+        "bytes": 71748
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-002",
+    "originalBytes": 77484,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-002-160-fc0ef3e79b9d.webp",
+        "bytes": 4192
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-002-320-0ca9bd1d5159.webp",
+        "bytes": 13492
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-002-640-b808160fc706.webp",
+        "bytes": 42906
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-002-670-bb913a3ea945.webp",
+        "bytes": 66042
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-003",
+    "originalBytes": 61340,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-003-160-7ce51786f461.webp",
+        "bytes": 3506
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-003-320-57dfa292b8fb.webp",
+        "bytes": 9746
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-003-640-714197102f04.webp",
+        "bytes": 25536
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-003-895-647aa6f9a2ea.webp",
+        "bytes": 51342
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-004",
+    "originalBytes": 41298,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-004-160-b6ecc628c1bb.webp",
+        "bytes": 3652
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-004-320-b39802826364.webp",
+        "bytes": 10164
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-004-640-ad678f05db3e.webp",
+        "bytes": 25864
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-004-670-fc93bfd9541b.webp",
+        "bytes": 35302
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-005",
+    "originalBytes": 30520,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-005-160-20e6c192d1c1.webp",
+        "bytes": 2924
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-005-320-a37da13e4812.webp",
+        "bytes": 7608
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-005-640-dae020cc985c.webp",
+        "bytes": 19324
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-005-670-fd922bf7ccd7.webp",
+        "bytes": 26172
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-006",
+    "originalBytes": 53352,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-006-160-10904a711d89.webp",
+        "bytes": 3146
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-006-320-c07fcfe5cc78.webp",
+        "bytes": 8742
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-006-640-0faac24a77a1.webp",
+        "bytes": 22618
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-006-895-99a25f73b94c.webp",
+        "bytes": 45260
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-007",
+    "originalBytes": 94778,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-007-160-b70779c85ed4.webp",
+        "bytes": 3328
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-007-320-719120c6732d.webp",
+        "bytes": 9286
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-007-640-4341bef03046.webp",
+        "bytes": 25552
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-007-960-119eefefc52a.webp",
+        "bytes": 42916
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-007-1280-9982c56a83d8.webp",
+        "bytes": 80990
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-008",
+    "originalBytes": 114378,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-008-160-e6ad6f35a355.webp",
+        "bytes": 4016
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-008-320-4e422385b984.webp",
+        "bytes": 12916
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-008-640-186aafb34596.webp",
+        "bytes": 41422
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-008-895-afb83ebb2572.webp",
+        "bytes": 96796
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-009",
+    "originalBytes": 226580,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-009-160-a64c9dd24aa9.webp",
+        "bytes": 3378
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-009-320-136f5dff27da.webp",
+        "bytes": 11838
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-009-640-31a162152077.webp",
+        "bytes": 46918
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-009-960-1363fec8ca3b.webp",
+        "bytes": 87484
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-009-1280-2836f28c332f.webp",
+        "bytes": 188418
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-010",
+    "originalBytes": 140666,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-010-160-681e6c1b7c09.webp",
+        "bytes": 3970
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-010-320-a7c41330f7ee.webp",
+        "bytes": 13768
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-010-640-fb195d4ddfc9.webp",
+        "bytes": 47954
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-010-895-2a47a7062581.webp",
+        "bytes": 117076
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-011",
+    "originalBytes": 154324,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-011-160-acdfb6eb1d37.webp",
+        "bytes": 4378
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-011-320-921c45814959.webp",
+        "bytes": 15286
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-011-640-a033f11c799a.webp",
+        "bytes": 54248
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-011-895-909213817c53.webp",
+        "bytes": 128810
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-012",
+    "originalBytes": 39148,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-012-160-fbcb42dad5a2.webp",
+        "bytes": 4000
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-012-320-c0dbac039437.webp",
+        "bytes": 12904
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-012-445-6f1fc93ce726.webp",
+        "bytes": 32764
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-013",
+    "originalBytes": 142510,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-013-160-2c72fc80d266.webp",
+        "bytes": 4560
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-013-320-59c92900d561.webp",
+        "bytes": 15634
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-013-640-eb927425a10b.webp",
+        "bytes": 52086
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-013-895-d203612ce2c2.webp",
+        "bytes": 119144
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-014",
+    "originalBytes": 41536,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-014-160-02e41154932d.webp",
+        "bytes": 3980
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-014-320-42f6c304d20c.webp",
+        "bytes": 13230
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-014-445-0ec58feea7ea.webp",
+        "bytes": 35438
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-015",
+    "originalBytes": 62010,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-015-160-2bf7d621b0d5.webp",
+        "bytes": 3470
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-015-320-c3eeee339bd4.webp",
+        "bytes": 9614
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-015-640-8462afee2ec3.webp",
+        "bytes": 25278
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-015-895-67755b033c73.webp",
+        "bytes": 51588
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-016",
+    "originalBytes": 85858,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-016-160-7680e20e4ce2.webp",
+        "bytes": 2820
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-016-320-158fee75a01a.webp",
+        "bytes": 8008
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-016-640-7102b1406f88.webp",
+        "bytes": 22470
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-016-960-917388300751.webp",
+        "bytes": 38802
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-016-1280-1940a574a85a.webp",
+        "bytes": 72530
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-017",
+    "originalBytes": 59548,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-017-160-ce0965e335ba.webp",
+        "bytes": 3274
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-017-320-baff73c819ae.webp",
+        "bytes": 9302
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-017-640-4999aabbfa12.webp",
+        "bytes": 24592
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-017-895-87c583c9b7a3.webp",
+        "bytes": 50294
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-018",
+    "originalBytes": 58188,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-018-160-7bd65e20be90.webp",
+        "bytes": 3328
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-018-320-aaeb2c0db8cc.webp",
+        "bytes": 9086
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-018-640-b674a8207b1e.webp",
+        "bytes": 23816
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-018-895-5c4d87cdd544.webp",
+        "bytes": 48340
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-019",
+    "originalBytes": 36968,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-019-160-faf037f03d5c.webp",
+        "bytes": 3324
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-019-320-ddb912ffa498.webp",
+        "bytes": 8896
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-019-640-b7c5fe883115.webp",
+        "bytes": 22440
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-019-670-61f1267cb307.webp",
+        "bytes": 31108
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-020",
+    "originalBytes": 37514,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-020-160-c9eb83a618ec.webp",
+        "bytes": 3336
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-020-320-3ef697bff25c.webp",
+        "bytes": 9122
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-020-640-af74fdc2836e.webp",
+        "bytes": 22534
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-020-670-4ddfbf94e57d.webp",
+        "bytes": 31712
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-021",
+    "originalBytes": 36072,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-021-160-6b19572abd87.webp",
+        "bytes": 3256
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-021-320-50597ad4eea1.webp",
+        "bytes": 8730
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-021-640-bc191bf2c70d.webp",
+        "bytes": 21540
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-021-670-08b0e98273b2.webp",
+        "bytes": 30450
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-022",
+    "originalBytes": 36770,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-022-160-8845f223b091.webp",
+        "bytes": 3408
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-022-320-49600ef9f633.webp",
+        "bytes": 8924
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-022-640-1483fa57ad2e.webp",
+        "bytes": 22094
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-022-670-ee8bdab7d44b.webp",
+        "bytes": 30694
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-023",
+    "originalBytes": 152974,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-023-160-d17c0f4ac782.webp",
+        "bytes": 4380
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-023-320-ffd6e77c96b6.webp",
+        "bytes": 15222
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-023-640-294bc0684a44.webp",
+        "bytes": 54072
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-023-895-db39f5f8eb23.webp",
+        "bytes": 128596
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-024",
+    "originalBytes": 40820,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-024-160-0f99fb09a82a.webp",
+        "bytes": 4392
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-024-320-4f37755f8648.webp",
+        "bytes": 13828
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-024-445-009b89c2122c.webp",
+        "bytes": 34572
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-025",
+    "originalBytes": 41858,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-025-160-46bd855c9d78.webp",
+        "bytes": 4368
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-025-320-3444107bd639.webp",
+        "bytes": 13924
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-025-445-fc3cfc30bc80.webp",
+        "bytes": 35124
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-026",
+    "originalBytes": 39598,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-026-160-075aca7e71ad.webp",
+        "bytes": 4150
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-026-320-386d39509ed4.webp",
+        "bytes": 13046
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-026-445-dd53c8821e21.webp",
+        "bytes": 33418
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-027",
+    "originalBytes": 42628,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-027-160-41b9e20e14c9.webp",
+        "bytes": 4730
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-027-320-ffc9bfe7791b.webp",
+        "bytes": 14884
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-027-445-e2111bf956c9.webp",
+        "bytes": 35912
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-028",
+    "originalBytes": 40268,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-028-160-1a8a52eabea4.webp",
+        "bytes": 4166
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-028-320-1902871d02d2.webp",
+        "bytes": 13382
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-028-445-941bc86f24b6.webp",
+        "bytes": 33992
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-029",
+    "originalBytes": 93726,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-029-160-d64f61cf6cf2.webp",
+        "bytes": 3222
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-029-320-9d5b8f14594a.webp",
+        "bytes": 8966
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-029-640-fe96adf52bcc.webp",
+        "bytes": 24794
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-029-960-555125e4883e.webp",
+        "bytes": 42168
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-029-1280-90d0ca867ce9.webp",
+        "bytes": 80410
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-030",
+    "originalBytes": 60138,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-030-160-bbc24f005e47.webp",
+        "bytes": 3414
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-030-320-3a2739363f96.webp",
+        "bytes": 9568
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-030-640-1bab0ff9053b.webp",
+        "bytes": 25004
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-030-895-cc479974cfa6.webp",
+        "bytes": 50446
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-031",
+    "originalBytes": 85740,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-031-160-c6f2ecbe00f4.webp",
+        "bytes": 2928
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-031-320-856e37cd0796.webp",
+        "bytes": 8086
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-031-640-403316eddfd3.webp",
+        "bytes": 23092
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-031-960-757fd56f82d1.webp",
+        "bytes": 39704
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-031-1280-50625003a3fe.webp",
+        "bytes": 73820
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-032",
+    "originalBytes": 152502,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-032-160-dd16dc7ebdea.webp",
+        "bytes": 4448
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-032-320-5c54758539f7.webp",
+        "bytes": 15718
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-032-640-b6b3b207f2d1.webp",
+        "bytes": 55284
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-032-895-a0125189568b.webp",
+        "bytes": 127274
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-033",
+    "originalBytes": 148334,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-033-160-095ba4ab76c3.webp",
+        "bytes": 4146
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-033-320-f1c6ef09d078.webp",
+        "bytes": 15234
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-033-640-d3b4297a5656.webp",
+        "bytes": 52890
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-033-895-b21db6890c7a.webp",
+        "bytes": 124420
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-034",
+    "originalBytes": 142510,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-034-160-31b72c2531b2.webp",
+        "bytes": 4420
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-034-320-e1523827d00b.webp",
+        "bytes": 15680
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-034-640-2d9efdcdb281.webp",
+        "bytes": 51980
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-034-895-c1e3609d610a.webp",
+        "bytes": 117138
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-035",
+    "originalBytes": 40992,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-035-160-63187b5e0f8b.webp",
+        "bytes": 4068
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-035-320-a07ef69cd0f2.webp",
+        "bytes": 13608
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-035-445-fdc01538daf2.webp",
+        "bytes": 34476
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-036",
+    "originalBytes": 65154,
+    "variants": [
+      {
+        "width": 160,
+        "height": 107,
+        "path": "/images/optimized/lunch-photo-036-160-406da836b1c3.webp",
+        "bytes": 2772
+      },
+      {
+        "width": 320,
+        "height": 213,
+        "path": "/images/optimized/lunch-photo-036-320-4d19cafb1f5e.webp",
+        "bytes": 7036
+      },
+      {
+        "width": 640,
+        "height": 426,
+        "path": "/images/optimized/lunch-photo-036-640-187bfd594e2c.webp",
+        "bytes": 17694
+      },
+      {
+        "width": 960,
+        "height": 640,
+        "path": "/images/optimized/lunch-photo-036-960-fe14de10b156.webp",
+        "bytes": 28690
+      },
+      {
+        "width": 1280,
+        "height": 853,
+        "path": "/images/optimized/lunch-photo-036-1280-20023c8fefd2.webp",
+        "bytes": 55392
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-037",
+    "originalBytes": 33058,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-037-160-97604286fce2.webp",
+        "bytes": 2906
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-037-320-9b39e5e768ce.webp",
+        "bytes": 7002
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-037-640-f343d97b5397.webp",
+        "bytes": 15988
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-037-895-8d26fe00b9cf.webp",
+        "bytes": 28326
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-038",
+    "originalBytes": 37180,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-038-160-07d11c11a460.webp",
+        "bytes": 3206
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-038-320-aa63cf0b654e.webp",
+        "bytes": 7860
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-038-640-43b968828b0e.webp",
+        "bytes": 17786
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-038-895-286e271198eb.webp",
+        "bytes": 31652
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-039",
+    "originalBytes": 23120,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-039-160-d900179b9c48.webp",
+        "bytes": 2982
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-039-320-cdf64303e556.webp",
+        "bytes": 7116
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-039-640-fc7b66a53b77.webp",
+        "bytes": 16060
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-039-670-0e931fcecc85.webp",
+        "bytes": 20060
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-040",
+    "originalBytes": 22018,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-040-160-b642fe65fe5e.webp",
+        "bytes": 2912
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-040-320-aa8267a17c50.webp",
+        "bytes": 6728
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-040-640-1a35fc9d66fd.webp",
+        "bytes": 14968
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-040-670-637c051e60e8.webp",
+        "bytes": 18484
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-041",
+    "originalBytes": 22176,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-041-160-a61ece61a5bd.webp",
+        "bytes": 2814
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-041-320-634f9ec13fb2.webp",
+        "bytes": 6840
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-041-640-898628f432b0.webp",
+        "bytes": 15342
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-041-670-52a28c2319b4.webp",
+        "bytes": 18870
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-042",
+    "originalBytes": 23576,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-042-160-cee19fe45a94.webp",
+        "bytes": 2878
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-042-320-50203ee6c3b3.webp",
+        "bytes": 6922
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-042-640-242ac8908644.webp",
+        "bytes": 15166
+      },
+      {
+        "width": 670,
+        "height": 506,
+        "path": "/images/optimized/lunch-photo-042-670-3820cccfa83c.webp",
+        "bytes": 19036
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-043",
+    "originalBytes": 32070,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-043-160-2444ce9a7335.webp",
+        "bytes": 2830
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-043-320-b07a15bdb74c.webp",
+        "bytes": 6742
+      },
+      {
+        "width": 640,
+        "height": 483,
+        "path": "/images/optimized/lunch-photo-043-640-4b2af646c53f.webp",
+        "bytes": 15068
+      },
+      {
+        "width": 895,
+        "height": 676,
+        "path": "/images/optimized/lunch-photo-043-895-d484cb41c5ea.webp",
+        "bytes": 27160
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-044",
+    "originalBytes": 14896,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-044-160-8b5f783662a1.webp",
+        "bytes": 3202
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-044-320-3ed159715477.webp",
+        "bytes": 7368
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-044-445-83d09f179ea4.webp",
+        "bytes": 12532
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-045",
+    "originalBytes": 15598,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-045-160-b792ed6294e0.webp",
+        "bytes": 3084
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-045-320-9c59675aef4f.webp",
+        "bytes": 7280
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-045-445-0eba86a0a1e4.webp",
+        "bytes": 12954
+      }
+    ]
+  },
+  {
+    "image": "lunch-photo-046",
+    "originalBytes": 14254,
+    "variants": [
+      {
+        "width": 160,
+        "height": 121,
+        "path": "/images/optimized/lunch-photo-046-160-1d8bd0783357.webp",
+        "bytes": 2960
+      },
+      {
+        "width": 320,
+        "height": 242,
+        "path": "/images/optimized/lunch-photo-046-320-3fc2932c31f3.webp",
+        "bytes": 6878
+      },
+      {
+        "width": 445,
+        "height": 336,
+        "path": "/images/optimized/lunch-photo-046-445-f0f1b843b348.webp",
+        "bytes": 12074
+      }
+    ]
+  },
+  {
     "image": "meatballs-pasta",
     "originalBytes": 2873111,
     "variants": [

@@ -12,12 +12,14 @@ const manifest = {};
 const report = [];
 await mkdir(output, { recursive: true });
 
-for (const file of (await readdir(input)).filter((name) => name.endsWith('.png')).sort()) {
+for (const file of (await readdir(input)).filter((name) => /\.(png|jpe?g|webp)$/i.test(name)).sort()) {
   const source = await readFile(path.join(input, file));
   const metadata = await sharp(source).metadata();
-  const name = path.basename(file, '.png');
+  const name = path.parse(file).name;
   const variants = [];
-  const targetWidths = [...new Set(widths.map((width) => Math.min(width, metadata.width)))];
+  const sourceWidth = metadata.autoOrient?.width ?? metadata.width;
+  if (!sourceWidth) throw new Error(`Cannot read image dimensions: ${file}`);
+  const targetWidths = [...new Set(widths.map((width) => Math.min(width, sourceWidth)))];
   for (const width of targetWidths) {
     const { data, info } = await sharp(source)
       .rotate()

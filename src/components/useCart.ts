@@ -1,22 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { addItem, CartItem, deliveryDays, DeliveryDay, itemKey, readSavedCart } from '@/lib/order';
+import { addItem, CartItem, deliveryWeeks, DeliveryWeek, itemKey, readSavedCart } from '@/lib/order';
 
 const STORAGE_KEY = 'chaika-lunch-cart-v1';
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [days, setDays] = useState<DeliveryDay[]>([]);
+  const [weeks, setWeeks] = useState<DeliveryWeek[]>([]);
+  const days = weeks.flatMap((week) => week.days);
   const [date, setDate] = useState('');
+  const activeWeek = weeks.find((week) => week.days.some((day) => day.value === date));
   const [ready, setReady] = useState(false);
   const [storageNotice, setStorageNotice] = useState('');
 
   useEffect(() => {
     // Browser-only hydration keeps the static preview deterministic.
     const timer = window.setTimeout(() => {
-      const schedule = deliveryDays();
-      setDays(schedule);
+      const nextWeeks = deliveryWeeks();
+      const schedule = nextWeeks.flatMap((week) => week.days);
+      setWeeks(nextWeeks);
       setDate(schedule[0].value);
       try {
         setItems(readSavedCart(localStorage.getItem(STORAGE_KEY), schedule.map((day) => day.value)));
@@ -56,5 +59,5 @@ export function useCart() {
     setItems((current) => selection.filter((choice) => days.some((day) => day.value === choice.date)).reduce((cart, choice) => addItem(cart, choice.mealId, choice.date), current));
   }
 
-  return { items, days, date, setDate, ready, storageNotice, add, change, remove, addWeek, clear: () => setItems([]) };
+  return { items, days, weeks, activeWeek, date, setDate, ready, storageNotice, add, change, remove, addWeek, clear: () => setItems([]) };
 }

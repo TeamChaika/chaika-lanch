@@ -19,9 +19,9 @@ test('food photos use responsive WebP and the desktop hero is not fetched on mob
     await expect.poll(() => page.locator('.hero-image img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(1);
   }
   await page.getByRole('button', { name: 'На неделю', exact: true }).click();
-  // Tuesday's photo was not on the initial Monday page: test a fresh download,
-  // since browsers may reuse a larger cached image for Monday's thumbnail.
-  const thumbnail = page.locator('.week-row img').nth(1);
+  // Wednesday's photo was not on the initial Monday page: test a fresh download,
+  // since browsers may reuse a larger cached image for Monday's or the hero's thumbnail.
+  const thumbnail = page.locator('.week-row img').nth(2);
   await expect.poll(() => thumbnail.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   expect(await thumbnail.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/-(160|320)-[a-f0-9]+\.webp$/);
   expect(foodRequests.length).toBeGreaterThan(0);

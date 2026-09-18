@@ -10,24 +10,25 @@ test('menu, item detail, persistent cart and honest demo checkout', async ({ pag
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await expect(page.getByRole('heading', { name: /Что на обед|Обед готов/ })).toBeVisible();
-  await page.getByRole('button', { name: 'Состав обеда Домашний' }).click();
+  await page.getByRole('button', { name: 'Состав обеда Куриная котлета' }).click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog.getByText('Куриный суп с лапшой')).toBeVisible();
-  await dialog.getByText('Состав и аллергены', { exact: true }).click();
-  await expect(dialog.getByText(/Молоко, пшеница/)).toBeVisible();
-  await dialog.getByRole('button', { name: /Добавить · 450/ }).click();
+  await expect(dialog.getByText('Суп-лапша с курицей')).toBeVisible();
+  await expect(dialog.locator('.dish-list li')).toHaveCount(4);
+  await expect(dialog.locator('.dish-list')).toContainText('Яблоко — смородина');
+  await expect(dialog.getByText('Полный обед · 850 г')).toBeVisible();
+  await dialog.getByRole('button', { name: /Добавить · 550/ }).click();
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Увеличить: Домашний', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Увеличить: Домашний', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Увеличить: Куриная котлета', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Увеличить: Куриная котлета', exact: true }).click();
   if (testInfo.project.name === 'mobile') await page.locator('.mobile-cart-bar').click();
   else await page.getByRole('button', { name: 'Корзина, товаров: 2' }).click();
-  await expect(dialog.locator('.total-row')).toContainText('900');
+  await expect(dialog.locator('.total-row')).toContainText('1 100');
   await dialog.getByRole('button', { name: 'Оформить заказ' }).click();
   await expect(dialog.getByText(/Заказ не отправится, оплаты нет/)).toBeVisible();
   await dialog.getByLabel('Улица и дом', { exact: true }).fill('ул. Примерная, 12');
   await dialog.getByLabel('Имя', { exact: true }).fill('Тест');
   await dialog.getByLabel('Телефон', { exact: true }).fill('+7 999 000 00 00');
-  await expect(dialog.locator('.total-row')).toContainText('1 000');
+  await expect(dialog.locator('.total-row')).toContainText('1 200');
   await dialog.getByRole('button', { name: 'Посмотреть подтверждение' }).click();
   await expect(dialog.getByRole('heading', { name: 'Демо-заказ собран' })).toBeVisible();
   await expect(dialog.getByText(/оплата не списывалась/)).toBeVisible();
@@ -43,36 +44,49 @@ test('week order preserves dates and calculates delivery once per day', async ({
   await expect(dialog.getByText('Дней с обедом: 4')).toBeVisible();
   await expect(dialog.locator('.gift-card--earned')).toHaveCount(0);
   await expect(dialog.locator('.gift-card')).toContainText('Выбрано дней: 4 из 5');
-  await expect(dialog.locator('.total-row')).toContainText('1 900');
+  await expect(dialog.locator('.total-row')).toContainText('2 200');
   await dialog.getByRole('button', { name: 'Добавить в корзину' }).click();
   await expect(dialog.locator('.cart-item')).toHaveCount(4);
   await dialog.getByRole('button', { name: 'Оформить заказ' }).click();
-  await expect(dialog.locator('.total-row')).toContainText('2 300');
+  await expect(dialog.locator('.total-row')).toContainText('2 600');
   await expect(dialog.locator('.gift-summary')).toHaveCount(0);
   await expect(dialog.getByText('Доставка, 4 дн.')).toBeVisible();
 });
 
-test('weekday menus and week picker show the same twelve distinct lunches', async ({ page }) => {
-  const expected = [
-    ['homestyle', 'classic', 'special'],
-    ['turkey-bulgur', 'meatballs-pasta', 'pork-potatoes'],
-    ['chicken-plov', 'hake-couscous'],
-    ['chicken-cutlet', 'beef-stroganoff'],
-    ['stuffed-peppers', 'chicken-mushroom'],
-  ];
-  const names: string[] = [];
-  for (let day = 0; day < 5; day++) {
-    await page.locator('.date-tab').nth(day).click();
-    await expect(page.locator('.meal-card')).toHaveCount(expected[day].length);
-    names.push(...await page.locator('.meal-title').allTextContents());
+test('all twenty complexes match the daily and weekly selectors', async ({ page }) => {
+  const seen = new Set<string>();
+  for (let week = 0; week < 4; week++) {
+    await page.locator('.menu-week').nth(week).click();
+    for (let day = 0; day < 5; day++) {
+      await page.locator('.date-tab').nth(day).click();
+      await expect(page.locator('.meal-card')).toHaveCount(1);
+      await expect(page.locator('.meal-composition li')).toHaveCount(4);
+      await expect(page.locator('.meal-card-bottom')).toContainText('550');
+      seen.add(await page.locator('.meal-composition').innerText());
+    }
+    await page.getByRole('button', { name: 'На неделю', exact: true }).click();
+    const selects = page.getByRole('dialog').locator('.week-select select');
+    await expect(selects).toHaveCount(5);
+    for (let day = 0; day < 5; day++) {
+      const values = await selects.nth(day).locator('option').evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value));
+      expect(values).toEqual([`week-${week + 1}-day-${day + 1}`, '']);
+    }
+    await page.keyboard.press('Escape');
   }
-  expect(new Set(names).size).toBe(12);
+  expect(seen.size).toBe(20);
+});
+
+test('ordering a later week retains its October dates across reload', async ({ page }) => {
+  await page.locator('.menu-week').nth(3).click();
+  await expect(page.locator('.menu-week').nth(3)).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: 'На неделю', exact: true }).click();
-  const selects = page.getByRole('dialog').locator('.week-select select');
-  for (let day = 0; day < 5; day++) {
-    const values = await selects.nth(day).locator('option').evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value));
-    expect(values).toEqual([...expected[day], '']);
-  }
+  await page.getByRole('dialog').getByRole('button', { name: 'Добавить в корзину' }).click();
+  await expect(page.locator('.cart-date').first()).toHaveText('12 октября');
+  await expect(page.locator('.cart-date').last()).toHaveText('16 октября');
+  await page.reload();
+  await expect(page.locator('.meal-card')).toHaveCount(1);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('chaika-lunch-cart-v1') ?? '[]'));
+  expect(saved.map((item: {date: string}) => item.date)).toEqual(['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16']);
 });
 
 test('full week earns one free pastry through reload and confirmation', async ({ page }, testInfo) => {
@@ -81,7 +95,7 @@ test('full week earns one free pastry through reload and confirmation', async ({
   await expect(dialog.locator('.gift-card--earned')).toContainText('0 ₽');
   await dialog.getByRole('button', { name: 'Добавить в корзину' }).click();
   await expect(dialog.locator('.gift-card--earned')).toHaveCount(1);
-  await expect(dialog.locator('.total-row')).toContainText('2 400');
+  await expect(dialog.locator('.total-row')).toContainText('2 750');
   await page.reload();
   if (testInfo.project.name === 'mobile') await page.locator('.mobile-cart-bar').click();
   else await page.getByRole('button', { name: 'Корзина, товаров: 5' }).click();
@@ -89,14 +103,14 @@ test('full week earns one free pastry through reload and confirmation', async ({
   await dialog.getByRole('button', { name: 'Оформить заказ' }).click();
   await expect(dialog.locator('.gift-summary')).toContainText('Выпечка в подарок · 1 шт.');
   await expect(dialog.locator('.gift-summary')).toContainText('0 ₽');
-  await expect(dialog.locator('.total-row')).toContainText('2 900');
+  await expect(dialog.locator('.total-row')).toContainText('3 250');
   await dialog.getByLabel('Улица и дом', { exact: true }).fill('ул. Примерная, 12');
   await dialog.getByLabel('Имя', { exact: true }).fill('Тест');
   await dialog.getByLabel('Телефон', { exact: true }).fill('+7 999 000 00 00');
   await dialog.getByRole('button', { name: 'Посмотреть подтверждение' }).click();
   await expect(dialog.getByRole('heading', { name: 'Демо-заказ собран' })).toBeVisible();
   await expect(dialog.locator('.gift-card--earned')).toContainText('0 ₽');
-  await expect(dialog.locator('.total-row')).toContainText('2 900');
+  await expect(dialog.locator('.total-row')).toContainText('3 250');
 });
 
 test('removing a delivery day withdraws the weekly gift', async ({ page }) => {
@@ -108,19 +122,19 @@ test('removing a delivery day withdraws the weekly gift', async ({ page }) => {
   await expect(dialog.locator('.gift-card')).toContainText('Выбрано дней: 4 из 5');
   await dialog.getByRole('button', { name: 'Оформить заказ' }).click();
   await expect(dialog.locator('.gift-summary')).toHaveCount(0);
-  await expect(dialog.locator('.total-row')).toContainText('2 300');
+  await expect(dialog.locator('.total-row')).toContainText('2 600');
 });
 
 test('five portions on one day do not earn the weekly gift', async ({ page }, testInfo) => {
-  await page.getByRole('button', { name: 'Состав обеда Домашний' }).click();
+  await page.getByRole('button', { name: 'Состав обеда Куриная котлета' }).click();
   const dialog = page.getByRole('dialog');
-  for (let index = 0; index < 4; index++) await dialog.getByRole('button', { name: 'Увеличить: Домашний', exact: true }).click();
+  for (let index = 0; index < 4; index++) await dialog.getByRole('button', { name: 'Увеличить: Куриная котлета', exact: true }).click();
   await dialog.getByRole('button', { name: /Добавить ·/ }).click();
   if (testInfo.project.name === 'mobile') await page.locator('.mobile-cart-bar').click();
   else await page.getByRole('button', { name: 'Корзина, товаров: 5' }).click();
   await expect(dialog.locator('.gift-card--earned')).toHaveCount(0);
   await expect(dialog.locator('.gift-card')).toContainText('Выбрано дней: 1 из 5');
-  await expect(dialog.locator('.total-row')).toContainText('2 250');
+  await expect(dialog.locator('.total-row')).toContainText('2 750');
 });
 
 test('city selection, keyboard dialog dismissal and narrow layout', async ({ page }, testInfo) => {
