@@ -1,6 +1,7 @@
 import { FoodImage } from './FoodImage';
 import { ArrowUpRight, Minus, Plus } from 'lucide-react';
 import { Meal, money } from '@/data/menu';
+import { MealNutrition } from './MealNutrition';
 
 export function Quantity({ value, onDecrease, onIncrease, label = 'Количество' }: { value: number; onDecrease: () => void; onIncrease: () => void; label?: string }) {
   return <div className="quantity" role="group" aria-label={label}>
@@ -22,6 +23,7 @@ export function MealCard({ meal, quantity, onOpen, onAdd, onRemove, eager = fals
       <button type="button" className="meal-title" onClick={onOpen}>{meal.name}</button>
       <ul className="meal-composition">{meal.dishes.map((dish, index) => <li key={index}><div><small>{dish.category}</small><span>{dish.name}</span></div><span className="dish-weight">{dish.weight} г</span></li>)}</ul>
       <div className="meal-meta"><span>{meal.dishes.reduce((sum, dish) => sum + dish.weight, 0)} г</span><span>Полный комплекс с напитком</span></div>
+      <MealNutrition value={meal.nutrition} />
       <div className="meal-card-bottom"><strong>{money(meal.price)}</strong>
         {quantity ? <Quantity value={quantity} onDecrease={onRemove} onIncrease={onAdd} label={meal.name} /> : <button type="button" className="button button-primary add-button" onClick={onAdd}>Добавить <Plus size={17} /></button>}
       </div>

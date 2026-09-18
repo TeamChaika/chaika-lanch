@@ -97,6 +97,16 @@ img { max-width: 100%; }
 .meal-card-body > p { color: var(--muted); font-size: 13px; line-height: 1.55; min-height: 41px; max-width: 300px; }
 .meal-meta { display: flex; gap: 13px; align-items: center; color: var(--muted); font-size: 11px; margin-top: 15px; }
 .meal-meta > span + span { padding-left: 13px; border-left: 1px solid var(--line); }
+.meal-nutrition { padding: 15px 16px; margin: 18px 0 4px; border-radius: 14px; background: #edf1e9; }
+.nutrition-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 10px; }
+.nutrition-heading strong { font-size: 12px; letter-spacing: .6px; }
+.nutrition-heading span { color: var(--muted); font-size: 11px; }
+.nutrition-values { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 13px 0 0; }
+.nutrition-values dt { color: var(--muted); font-size: 10px; margin-bottom: 5px; }
+.nutrition-values dd { margin: 0; font-size: 18px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.nutrition-values small { font-size: 10px; font-weight: 500; }
+.nutrition-note { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+@media (max-width: 380px) { .meal-nutrition { padding: 13px 11px; }.nutrition-values { gap: 4px; }.nutrition-values dd { font-size: 16px; } }
 .meal-card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 21px; }
 .meal-card-bottom > strong { font-size: 27px; font-weight: 650; letter-spacing: -.8px; white-space: nowrap; }
 .add-button { min-height: 43px; padding: 10px 15px; gap: 15px; font-size: 13px; }

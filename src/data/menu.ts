@@ -3,6 +3,13 @@ import { site } from './site';
 
 export interface Dish { name: string; weight: number; category: string }
 export interface ImageVariant { width: number; height: number; path: string; bytes: number }
+export interface MealNutrition {
+  calories: number | null;
+  protein: number | null;
+  fat: number | null;
+  carbs: number | null;
+  estimated: boolean;
+}
 export interface Meal {
   id: string;
   name: string;
@@ -16,6 +23,7 @@ export interface Meal {
   week: number;
   weekday: number;
   dishes: Dish[];
+  nutrition?: MealNutrition;
 }
 
 // Serving examples from the supplied photo folder; not exact recipe photos.
