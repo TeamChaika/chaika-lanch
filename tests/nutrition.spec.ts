@@ -108,10 +108,10 @@ test('messenger bots receive complete social metadata and private pages remain n
   expect(response.status()).toBe(200);
   const html = await response.text();
   for (const name of ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:width', 'og:image:height', 'twitter:card']) expect(html).toContain(`"${name}"`);
-  expect(html).toContain('https://lunch.chaika.team/social/chaika-lunch-v1.jpg');
+  expect(html).toContain('https://lunch.chaika.team/social/chaika-lunch-v2.jpg');
   expect(html).toContain('summary_large_image');
   expect(html).toContain('name="robots" content="index, follow"');
-  const image = await request.get('/social/chaika-lunch-v1.jpg');
+  const image = await request.get('/social/chaika-lunch-v2.jpg');
   expect(image.status()).toBe(200); expect(image.headers()['content-type']).toContain('image/jpeg');
   expect((await image.body()).length).toBeLessThan(300_000);
   for (const route of ['/admin', '/admin/orders', '/payment/00000000-0000-4000-8000-000000000000']) {
