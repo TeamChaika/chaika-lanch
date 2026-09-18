@@ -8,7 +8,7 @@ export function checkOrigin(request: Request) {
   if (!allowed.length) throw new Error('APP_ORIGINS is not configured');
   if (!allowed.includes(request.headers.get('origin') || '') || request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Запрос отклонён. Откройте админку на сайте заново.');
 }
-export async function limitedBody(request: Request, maxBytes: number): Promise<Uint8Array> {
+export async function limitedBody(request: Pick<Request, 'headers' | 'body'>, maxBytes: number): Promise<Uint8Array> {
   const length = Number(request.headers.get('content-length') || 0);
   if (length > maxBytes) throw new HttpError(413, 'Файл или запрос слишком большой');
   if (!request.body) throw new HttpError(400, 'Пустой запрос');

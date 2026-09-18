@@ -16,7 +16,7 @@ import { useCatalog } from './MenuProvider';
 
 type Modal = 'cart' | 'checkout' | 'confirmation' | 'address' | 'week' | 'business' | 'navigation' | null;
 
-export function Storefront() {
+export function Storefront({ sandboxPayments = false }: { sandboxPayments?: boolean }) {
   const { catalog, mealsForDate, cartTotal, startingPrice } = useCatalog();
   const meals = catalog.meals;
   const cart = useCart();
@@ -87,7 +87,7 @@ export function Storefront() {
     {modal === 'address' && <AddressDialog city={city} address={address} onClose={close} onSave={(value) => { setAddress(value); setCity(value.city as City); close(); }} />}
     {modal === 'week' && <WeekDialog days={cart.activeWeek?.days ?? []} onClose={close} onAdd={(selection) => { cart.addWeek(selection); setModal('cart'); }} />}
     {modal === 'cart' && <CartDialog items={cart.items} city={city} address={address} onChange={cart.change} onRemove={cart.remove} onClose={close} onCheckout={() => setModal('checkout')} />}
-    {modal === 'checkout' && <CheckoutDialog items={cart.items} city={city} address={address} onClose={close} onBack={() => setModal('cart')} onConfirm={(value) => { setOrder(value); setCity(value.address.city as City); setAddress(value.address); cart.clear(); setModal('confirmation'); }} />}
+    {modal === 'checkout' && <CheckoutDialog sandboxPayments={sandboxPayments} items={cart.items} city={city} address={address} onClose={close} onBack={() => setModal('cart')} onConfirm={(value) => { setOrder(value); setCity(value.address.city as City); setAddress(value.address); cart.clear(); setModal('confirmation'); }} />}
     {modal === 'confirmation' && order && <ConfirmationDialog order={order} onClose={close} />}
     {modal === 'business' && <BusinessDialog city={city} onClose={close} />}
     {modal === 'navigation' && <Dialog title="Чайка Обеды" onClose={close}><nav className="mobile-navigation" aria-label="Мобильная навигация">{[['#menu', 'Меню'], ['#companies', 'Компаниям'], ['#delivery', 'Доставка']].map(([href, label]) => <a key={href} href={href} onClick={close}>{label}<ArrowRight size={20} /></a>)}<button onClick={() => setModal('cart')}>Корзина <span>{money(total)}</span></button></nav></Dialog>}

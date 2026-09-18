@@ -482,3 +482,20 @@ details[open] > summary > svg { transform: rotate(180deg); }
   .meal-composition li { font-size: 12px; gap: 10px; }
   .meal-grid--single .meal-meta > span + span { display: block; }
 }
+
+/* QR Manager sandbox checkout */
+.payment-page { max-width: 620px; padding: 30px 20px 60px; margin: auto; min-height: 100dvh; }
+.payment-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; font-size: 14px; }
+.payment-card { background: #fff; border: 1px solid #e8e2d9; border-radius: 24px; padding: 32px; text-align: center; }
+.payment-test-badge { display: inline-block; padding: 8px 12px; border-radius: 30px; background: #fff0dc; color: #804100; font-size: 11px; font-weight: 650; letter-spacing: .06em; }
+.payment-symbol { color: #bf6818; margin: 24px auto 14px; }
+.payment-symbol--success { color: #34764a; }
+.payment-card h1 { font-size: clamp(25px, 5vw, 34px); line-height: 1.15; letter-spacing: -.04em; margin: 0 0 14px; }
+.payment-card > .muted { line-height: 1.6; font-size: 15px; }
+.payment-card .demo-notice { margin: 20px 0; text-align: center; }
+.payment-qr img { display: block; max-width: 100%; height: auto; margin: 0 auto 16px; }
+.payment-summary { margin: 28px 0; text-align: left; }
+.payment-summary .summary-row { gap: 18px; }
+.payment-summary .summary-row > span:last-child { white-space: nowrap; }
+.payment-return { margin-top: 12px; }
+@media (max-width: 600px) { .payment-page { padding: 20px 14px 40px; } .payment-card { padding: 24px 18px; border-radius: 20px; } }

@@ -1,7 +1,8 @@
 'use client';
 
 import { FoodImage } from './FoodImage';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, CalendarDays, Check, CheckCircle2, CreditCard, MapPin, ShoppingBag, Trash2, Truck } from 'lucide-react';
 import { Meal, money } from '@/data/menu';
 import { City, site } from '@/data/site';
@@ -92,14 +93,18 @@ export function CartDialog({ items, city, address, onChange, onRemove, onCheckou
 
 export interface OrderPreview { name: string; address: DeliveryAddress; slot: string; payment: string; items: CartItem[]; total: number; delivery: number }
 
-export function CheckoutDialog({ items, city, address, onConfirm, onBack, onClose }: Close & { items: CartItem[]; city: City; address: DeliveryAddress | null; onConfirm: (order: OrderPreview) => void; onBack: () => void }) {
+export function CheckoutDialog({ items, city, address, sandboxPayments = false, onConfirm, onBack, onClose }: Close & { items: CartItem[]; city: City; address: DeliveryAddress | null; sandboxPayments?: boolean; onConfirm: (order: OrderPreview) => void; onBack: () => void }) {
+  const router = useRouter();
   const { cartTotal } = useCatalog();
-  const [payment, setPayment] = useState('Картой');
+  const [payment, setPayment] = useState(sandboxPayments ? 'СБП' : 'Картой');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
+  const attempt = useRef<{ id: string; fingerprint: string } | null>(null);
   const dates = [...new Set(items.map((item) => item.date))].sort();
   const delivery = dates.length * site.deliveryFee;
   const total = cartTotal(items) + delivery;
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const phone = String(data.get('phone')).replace(/\D/g, '');
@@ -108,19 +113,42 @@ export function CheckoutDialog({ items, city, address, onConfirm, onBack, onClos
     const name = String(data.get('name')).trim();
     if (street.length < 5 || name.length < 2) { setError('Укажите имя и полный адрес с номером дома.'); return; }
     if (!items.length) { setError('Добавьте хотя бы один обед.'); return; }
+    if (sandboxPayments) {
+      if (submitting.current) return;
+      submitting.current = true; setBusy(true); setError('');
+      try {
+        const payload = { items: items.map(({ mealId, date, quantity }) => ({ mealId, date, quantity })), expectedTotal: total * 100 };
+        const fingerprint = JSON.stringify(payload);
+        if (!attempt.current) {
+          try { attempt.current = JSON.parse(sessionStorage.getItem('chaika-payment-attempt') || 'null'); } catch { /* In-memory attempt still prevents duplicate clicks. */ }
+        }
+        if (attempt.current?.fingerprint !== fingerprint) attempt.current = { id: crypto.randomUUID(), fingerprint };
+        // Store only a request identifier and cart, never the customer's phone or address.
+        try { sessionStorage.setItem('chaika-payment-attempt', JSON.stringify(attempt.current)); } catch { /* Browser storage is optional. */ }
+        const session = await fetch('/api/payments/session', { method: 'POST', signal: AbortSignal.timeout(15000) });
+        const sessionData = await session.json();
+        if (!session.ok || !sessionData.enabled) throw new Error(sessionData.error || 'Тестовая оплата пока не настроена.');
+        const response = await fetch('/api/payments', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, id: attempt.current.id }), signal: AbortSignal.timeout(45000) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Не удалось создать тестовую оплату.');
+        router.push(`/payment/${attempt.current.id}`);
+      } catch (err) { setError(err instanceof Error && err.name !== 'TimeoutError' ? err.message : 'Ответ задерживается. Нажмите ещё раз, чтобы проверить ту же попытку оплаты.'); }
+      finally { submitting.current = false; setBusy(false); }
+      return;
+    }
     onConfirm({ name, address: { city: String(data.get('city')), street, office: String(data.get('office')).trim(), floor: String(data.get('floor')).trim() }, slot: String(data.get('slot')), payment, items: items.map((item) => ({ ...item })), total, delivery });
   }
   return <Dialog title="Оформление заказа" onClose={onClose} onBack={onBack}><form onSubmit={submit} className="dialog-form">
-    <div className="dialog-content dialog-scroll"><div className="demo-notice">Демонстрация оформления. Заказ не отправится, оплаты нет.</div><h3 className="form-heading">Куда привезти</h3>
+    <div className="dialog-content dialog-scroll"><div className="demo-notice">{sandboxPayments ? 'Тест QR Manager: деньги не списываются, заказ на кухню не отправляется. Введите вымышленные контакты — они не передаются платёжному сервису.' : 'Демонстрация оформления. Заказ не отправится, оплаты нет.'}</div><h3 className="form-heading">Куда привезти</h3>
       <label className="field">Город<select name="city" defaultValue={address?.city ?? city}>{site.cities.map((value) => <option key={value}>{value}</option>)}</select></label>
       <label className="field">Улица и дом<input name="street" defaultValue={address?.street} autoComplete="street-address" placeholder="Например, ул. Ленина, 12" required minLength={5} maxLength={150} /></label>
       <div className="field-grid"><label className="field">Офис / квартира<input name="office" defaultValue={address?.office} maxLength={20} /></label><label className="field">Этаж<input name="floor" defaultValue={address?.floor} inputMode="numeric" maxLength={5} /></label></div>
       <h3 className="form-heading">Когда</h3><div className="soft-note"><CalendarDays size={18} /><span>{dates.map(formatDate).join(', ')}</span></div>
       <label className="field">Интервал доставки<select name="slot">{site.deliverySlots.map((slot) => <option key={slot}>{slot}</option>)}</select></label>
       <h3 className="form-heading">Ваши контакты</h3><div className="field-grid"><label className="field">Имя<input name="name" autoComplete="given-name" placeholder="Как к вам обращаться" minLength={2} maxLength={60} required /></label><label className="field">Телефон<input name="phone" type="tel" autoComplete="tel" inputMode="tel" placeholder="+7 (___) ___-__-__" required maxLength={20} aria-describedby={error ? 'checkout-error' : undefined} /></label></div>
-      <fieldset className="payment-fieldset"><legend>Способ оплаты</legend><div className="payment-options">{['Картой', 'СБП'].map((method) => <label className={payment === method ? 'selected' : ''} key={method}><input type="radio" name="payment" value={method} checked={payment === method} onChange={() => setPayment(method)} /><CreditCard size={19} />{method}</label>)}</div></fieldset>
+      <fieldset className="payment-fieldset"><legend>Способ оплаты</legend><div className="payment-options">{(sandboxPayments ? ['СБП'] : ['Картой', 'СБП']).map((method) => <label className={payment === method ? 'selected' : ''} key={method}><input type="radio" name="payment" value={method} checked={payment === method} onChange={() => setPayment(method)} /><CreditCard size={19} />{method}{sandboxPayments && ' · тест QR Manager'}</label>)}</div></fieldset>
       {error && <p className="error-message" role="alert" id="checkout-error">{error}</p>}
-    </div><footer className="dialog-footer"><div className="summary-row"><span>Обеды</span><span>{money(cartTotal(items))}</span></div><WeeklyGiftSummary items={items} /><div className="summary-row"><span>Доставка, {dates.length} дн.</span><span>{money(delivery)}</span></div><div className="total-row"><span>Итого</span><strong>{money(total)}</strong></div><button className="button button-primary full-width" type="submit">Посмотреть подтверждение <ArrowRight size={18} /></button></footer>
+    </div><footer className="dialog-footer"><div className="summary-row"><span>Обеды</span><span>{money(cartTotal(items))}</span></div><WeeklyGiftSummary items={items} /><div className="summary-row"><span>Доставка, {dates.length} дн.</span><span>{money(delivery)}</span></div><div className="total-row"><span>Итого</span><strong>{money(total)}</strong></div><button className="button button-primary full-width" type="submit" disabled={busy}>{busy ? 'Создаём тестовый платёж…' : sandboxPayments ? 'Перейти к тестовой оплате' : 'Посмотреть подтверждение'} <ArrowRight size={18} /></button></footer>
   </form></Dialog>;
 }
 
