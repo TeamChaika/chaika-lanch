@@ -90,13 +90,13 @@ npm run preview
 
 ## Timeweb App Platform
 
-Опубликованный сайт: https://lunch.chaika.team (технический адрес: https://teamchaika-chaika-lanch-9d91.twc1.net)
+Опубликованный сайт: https://lunch.chaika.team. Админка: https://lunch.chaika.team/admin. Технический адрес: https://teamchaika-chaika-lanch-23b6.twc1.net.
 
-Репозиторий: https://github.com/TeamChaika/chaika-lanch. Приложение Timeweb: **255963**.
+Репозиторий: https://github.com/TeamChaika/chaika-lanch, ветка `main`. Серверное приложение Timeweb: **256599**, проект **92411**.
 
-Приложение 255963 — прежняя статическая публикация. Версия с админкой требует **Backend / Next.js с SSR**, Node.js **24**, сборку `npm run build`, запуск `npm start`, порт 3000. Серверные переменные: `APP_ORIGINS`, `SESSION_SECRET`, `OWNER_PASSWORD_HASH`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PREFIX`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`. В `APP_ORIGINS` перечисляются разрешённые HTTPS-адреса через запятую. Автодеплой остаётся выключенным.
+Настройки: **Backend / Next.js с SSR**, Node.js **24**, сборка `npm run build`, запуск `npm start`, порт 3000. Тариф 2731: 1 CPU, 1 ГБ RAM, 15 ГБ диска, **510 ₽/месяц** на момент подключения 18 сентября 2026 года. Существующее S3 оплачивается отдельно. Серверные переменные: `APP_ORIGINS`, `SESSION_SECRET`, `OWNER_PASSWORD_HASH`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PREFIX`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`. В `APP_ORIGINS` перечислены основной и технический HTTPS-адреса через запятую. `CMS_STORAGE_PREFIX` в рабочем приложении не задаётся. Автодеплой выключен.
 
-Миграция на серверный тариф выполняется отдельно после согласования стоимости. До миграции текущий сайт продолжает работать на статической версии.
+Домен привязан к приложению 256599, A-запись указывает на `89.169.45.133`. Приложение **255963** сохранено как резерв прежней статической версии на коммите `4457ef7`, без основного домена: https://teamchaika-chaika-lanch-9d91.twc1.net. Его сборка использует статический экспорт; серверную версию из `main` туда публиковать нельзя.
 
 Исходники приложения хранятся в Git. Папки `research`, `node_modules`, `.next`, `out`, результаты тестов и локальные секреты исключены из репозитория. После изменения кода или логотипа сохраните изменения в Git, отправьте их в репозиторий и запустите новый деплой в Timeweb.
 
