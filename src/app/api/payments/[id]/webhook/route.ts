@@ -5,10 +5,12 @@ export const runtime = 'nodejs';
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params; z.uuid().parse(id);
-    if (!verifyWebhook(id, new URL(request.url).searchParams.get('token') || '')) throw new HttpError(403, 'Запрос отклонён.');
+    const params = new URL(request.url).searchParams;
+    const mode = z.enum(['live', 'sandbox']).parse(params.get('mode') || 'sandbox');
+    if (!verifyWebhook(id, params.get('token') || '', mode)) throw new HttpError(403, 'Запрос отклонён.');
     const input = z.object({ id: z.uuid() }).parse(await readJson(request, 8000));
     // The callback is only a signal to query QRM. Never trust its claimed status or amount.
-    await refreshPayment(id, input.id);
+    await refreshPayment(id, { mode, operationId: input.id, source: 'webhook', force: true });
     return json({ received: true });
   } catch (error) { return paymentFailure(error); }
 }

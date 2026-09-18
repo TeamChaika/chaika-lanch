@@ -2,18 +2,11 @@ import 'server-only';
 import { z } from 'zod';
 import QRCode from 'qrcode';
 import { HttpError, limitedBody } from './http';
+import type { PaymentMode } from '@/lib/payments';
+import { providerConfig } from './payment-config';
 
-const sandboxHost = 'https://app.devwapiserv.qrm.ooo';
-export function sandboxEnabled() { return process.env.QRM_MODE === 'sandbox' && Boolean(process.env.QRM_API_KEY); }
-function config() {
-  if (!sandboxEnabled()) throw new HttpError(503, 'Тестовая оплата пока не настроена.');
-  // A local HTTP fixture is allowed only in development. Production cannot select a live payment host.
-  const fixture = process.env.NODE_ENV === 'development' ? process.env.QRM_TEST_ORIGIN : undefined;
-  if (fixture && !/^http:\/\/127\.0\.0\.1:\d+$/.test(fixture)) throw new Error('Invalid QRM fixture');
-  return { host: fixture || sandboxHost, key: process.env.QRM_API_KEY! };
-}
 export class ProviderError extends Error {
-  constructor(public outcome: 'failed' | 'unknown') { super('QR Manager sandbox request failed'); }
+  constructor(public outcome: 'failed' | 'unknown') { super('QR Manager request failed'); }
 }
 export function paymentLink(value: string) {
   const url = new URL(value);
@@ -22,8 +15,8 @@ export function paymentLink(value: string) {
   return url.href;
 }
 const createResult = z.object({ results: z.object({ operation_id: z.uuid(), number: z.union([z.string(), z.number()]), qr_link: z.string().max(4096), payment_page_link: z.string().max(4096).nullish() }) });
-export async function createQr(input: { sum: number; payment_purpose: string; notification_url: string; redirect_url: string; nomenclature: { name: string; count: number; price: number; amount: number }[] }) {
-  const { host, key } = config();
+export async function createQr(input: { sum: number; payment_purpose: string; notification_url: string; redirect_url: string; customer_email?: string; nomenclature: { name: string; count: number; price: number; amount: number; payment_method?: number }[] }, mode: PaymentMode = 'sandbox') {
+  const { host, key } = providerConfig(mode);
   try {
     // No automatic retries: QRM does not document an idempotency key for this POST.
     const response = await fetch(`${host}/operations/qr-code/`, { method: 'POST', redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(20000),
@@ -38,9 +31,9 @@ export async function createQr(input: { sum: number; payment_purpose: string; no
 
 const statusResult = z.object({ results: z.object({ operation_status_code: z.number().int(), operation_sum: z.number().int().nonnegative() }) });
 export function parseStatus(value: unknown) { return statusResult.parse(value).results; }
-export async function readQrStatus(operationId: string) {
+export async function readQrStatus(operationId: string, mode: PaymentMode = 'sandbox') {
   z.uuid().parse(operationId);
-  const { host, key } = config();
+  const { host, key } = providerConfig(mode);
   const response = await fetch(`${host}/api/v2/sse-operations/${operationId}/qr-status/`, { headers: { Accept: 'text/event-stream, application/json', 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
   if (!response.ok) throw new ProviderError('unknown');
   if (response.headers.get('content-type')?.includes('application/json')) return parseStatus(JSON.parse(Buffer.from(await limitedBody(response, 32000)).toString()));
@@ -62,4 +55,13 @@ export async function readQrStatus(operationId: string) {
       }
     }
   } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+}
+
+export async function checkMerchant(mode: PaymentMode) {
+  const { host, key } = providerConfig(mode);
+  const response = await fetch(`${host}/users/check-api-key/`, { headers: { 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
+  if (!response.ok) throw new HttpError(503, 'Не удалось проверить платёжный терминал. Оплата временно недоступна.');
+  const merchant = z.object({ merchant_id: z.string().min(1), firm_name: z.string().min(1), qrt_name: z.string(), qrt_is_b2c: z.boolean(), vat: z.string().optional(), requires_receipt: z.boolean() }).parse(JSON.parse(Buffer.from(await limitedBody(response, 16000)).toString()));
+  if (!merchant.qrt_is_b2c || (mode === 'live' && /тестовая компания/i.test(merchant.firm_name))) throw new HttpError(503, 'Терминал не готов к приёму оплаты покупателей.');
+  return merchant;
 }

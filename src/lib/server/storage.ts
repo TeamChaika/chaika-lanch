@@ -1,9 +1,9 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rename, writeFile, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import { Agent } from 'node:https';
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 export class ConflictError extends Error {}
 export interface StoredObject { body: string; etag: string }
@@ -16,13 +16,34 @@ function s3() {
     requestHandler: { httpsAgent: new Agent({ keepAlive: true, maxSockets: 8 }), connectionTimeout: 10000, requestTimeout: 30000, throwOnRequestTimeout: true },
   });
 }
+
+export async function listObjects(prefix: string, limit = 30, cursor?: string) {
+  if (!/^cms\/payments\/(index|pending)\/(live|sandbox)\//.test(prefix) || prefix.includes('..')) throw new Error('Invalid list prefix');
+  if (isLocal()) {
+    let entries: string[];
+    try { entries = (await readdir(localPath(prefix))).sort().filter((name) => !cursor || name > cursor); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { names: [], cursor: undefined }; throw error; }
+    const selected = entries.slice(0, limit);
+    return { names: selected.map((name) => `${prefix}${name}`), cursor: entries.length > limit ? selected.at(-1) : undefined };
+  }
+  const result = await s3().send(new ListObjectsV2Command({ Bucket: process.env.S3_BUCKET, Prefix: key(prefix), MaxKeys: limit, ContinuationToken: cursor }));
+  const root = key(prefix).slice(0, -prefix.length);
+  return { names: (result.Contents || []).flatMap((entry) => entry.Key?.startsWith(root) ? [entry.Key.slice(root.length)] : []), cursor: result.NextContinuationToken };
+}
+export async function deleteQueueObject(name: string) {
+  if (!/^cms\/payments\/pending\/(live|sandbox)\/[\da-f-]+\.json$/.test(name)) throw new Error('Invalid queue key');
+  if (isLocal()) { try { await unlink(localPath(name)); } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; } return; }
+  await s3().send(new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key(name) }));
+}
 function key(name: string) {
   const prefix = name.startsWith('cms/') && process.env.CMS_STORAGE_PREFIX ? process.env.CMS_STORAGE_PREFIX : process.env.S3_PREFIX || 'chaika-lanch';
   return `${prefix}/${name}`;
 }
 function localPath(name: string) {
   if (!/^[a-zA-Z0-9/._-]+$/.test(name) || name.includes('..')) throw new Error('Invalid storage key');
-  return path.join(process.cwd(), '.local-menu', name);
+  const namespace = process.env.MENU_LOCAL_NAMESPACE || '';
+  if (namespace && !/^[a-z0-9-]+$/.test(namespace)) throw new Error('Invalid local namespace');
+  return path.join(process.cwd(), '.local-menu', namespace, name);
 }
 function isLocal() { return process.env.MENU_STORE === 'local'; }
 export async function readObject(name: string): Promise<StoredObject | null> {
