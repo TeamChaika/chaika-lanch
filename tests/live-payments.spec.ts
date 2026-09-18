@@ -73,6 +73,25 @@ test('durable worker verifies an order after customer leaves, without webhook', 
   expect((await request.post('/api/internal/payments/reconcile', { data: { mode: 'live' } })).status()).toBe(403);
 });
 
+test('terminal without fiscalization receives no email or receipt lines', async ({ request }) => {
+  await mode(request, 'no-receipt'); const data = await input(request);
+  const payment = await (await create(request, data)).json();
+  const provider = await sent(request, payment);
+  expect(provider.sum).toBe(65000);
+  expect(provider).not.toHaveProperty('customer_email'); expect(provider).not.toHaveProperty('nomenclature');
+});
+
+test('provider rejection is visible only to owner with secret redacted', async ({ request }) => {
+  await mode(request, 'provider-error'); const data = await input(request);
+  const payment = await (await create(request, data)).json();
+  expect(payment.state).toBe('failed'); expect(payment).not.toHaveProperty('reviewReason');
+  await owner(request);
+  const day = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Simferopol' }).format(new Date());
+  const inbox = await (await request.get(`/api/admin/orders?day=${day}&mode=live`)).json();
+  const reason = inbox.orders.find((order: { id: string }) => order.id === data.id).reviewReason;
+  expect(reason).toContain('HTTP 400'); expect(reason).not.toContain('local-fixture-key');
+});
+
 test('worker retains webhook UUID when creation response and first GET fail', async ({ request }) => {
   await mode(request, 'webhook-get-failure'); const data = await input(request);
   expect((await (await create(request, data)).json()).state).toBe('unknown');

@@ -16,11 +16,11 @@ const server = createServer(async (req, res) => {
   }
   if (req.url?.startsWith('/inspect/')) return res.end(JSON.stringify(operations.get(req.url.split('/')[2]) || {}));
   if (req.headers['x-api-key'] !== 'local-fixture-key') { res.statusCode = 403; return res.end('{}'); }
-  if (req.url === '/users/check-api-key/') return res.end(JSON.stringify({ merchant_id: 'fixture', firm_name: 'Локальная компания', qrt_name: 'Локальный терминал', qrt_is_b2c: true, requires_receipt: true }));
+  if (req.url === '/users/check-api-key/') return res.end(JSON.stringify({ merchant_id: 'fixture', firm_name: 'Локальная компания', qrt_name: 'Локальный терминал', qrt_is_b2c: true, requires_receipt: mode !== 'no-receipt', is_nomenclature: false }));
   if (req.url === '/operations/qr-code/') {
     count++;
     const body = JSON.parse(input);
-    if (mode === 'provider-error') { res.statusCode = 400; return res.end(JSON.stringify(['Cannot assign terminal: database router'])); }
+    if (mode === 'provider-error') { res.statusCode = 400; return res.end(JSON.stringify(['Cannot assign terminal: database router; key=' + req.headers['x-api-key']])); }
     if (mode === 'malformed') return res.end('{}');
     const id = randomUUID(); operations.set(id, { ...body, mode });
     if (mode === 'early-webhook' || mode === 'lost-response' || mode === 'webhook-get-failure') {

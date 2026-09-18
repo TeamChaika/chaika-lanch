@@ -6,7 +6,7 @@ import type { PaymentMode } from '@/lib/payments';
 import { providerConfig } from './payment-config';
 
 export class ProviderError extends Error {
-  constructor(public outcome: 'failed' | 'unknown') { super('QR Manager request failed'); }
+  constructor(public outcome: 'failed' | 'unknown', public diagnostic?: string) { super('QR Manager request failed'); }
 }
 export function paymentLink(value: string) {
   const url = new URL(value);
@@ -15,13 +15,20 @@ export function paymentLink(value: string) {
   return url.href;
 }
 const createResult = z.object({ results: z.object({ operation_id: z.uuid(), number: z.union([z.string(), z.number()]), qr_link: z.string().max(4096), payment_page_link: z.string().max(4096).nullish() }) });
-export async function createQr(input: { sum: number; payment_purpose: string; notification_url: string; redirect_url: string; customer_email?: string; nomenclature: { name: string; count: number; price: number; amount: number; payment_method?: number }[] }, mode: PaymentMode = 'sandbox') {
+export async function createQr(input: { sum: number; payment_purpose: string; notification_url: string; redirect_url: string; customer_email?: string; nomenclature?: { name: string; count: number; price: number; amount: number; payment_method?: number }[] }, mode: PaymentMode = 'sandbox') {
   const { host, key } = providerConfig(mode);
   try {
     // No automatic retries: QRM does not document an idempotency key for this POST.
     const response = await fetch(`${host}/operations/qr-code/`, { method: 'POST', redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(20000),
       headers: { 'Content-Type': 'application/json', 'X-Api-Key': key }, body: JSON.stringify(input) });
-    if (!response.ok) throw new ProviderError([400, 401, 403, 422].includes(response.status) ? 'failed' : 'unknown');
+    if (!response.ok) {
+      let detail = '';
+      try {
+        detail = Buffer.from(await limitedBody(response, 16000)).toString().replaceAll(key, '[ключ скрыт]').replace(/https?:\/\/[^\s"<>]+/g, '[ссылка скрыта]').replace(/[\x00-\x1f]+/g, ' ').slice(0, 500);
+      } catch { /* HTTP status remains known even if its diagnostic body is unavailable. */ }
+      // Only the encrypted owner record receives this detail, never the public API or logs.
+      throw new ProviderError([400, 401, 403, 422].includes(response.status) ? 'failed' : 'unknown', `QR Manager HTTP ${response.status}${detail ? `: ${detail}` : ''}`);
+    }
     const data = createResult.parse(JSON.parse(Buffer.from(await limitedBody(response, 64000)).toString())).results;
     const qrLink = paymentLink(data.qr_link);
     return { operationId: data.operation_id, number: String(data.number), paymentUrl: paymentLink(data.payment_page_link || qrLink),
@@ -61,7 +68,7 @@ export async function checkMerchant(mode: PaymentMode) {
   const { host, key } = providerConfig(mode);
   const response = await fetch(`${host}/users/check-api-key/`, { headers: { 'X-Api-Key': key }, redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000) });
   if (!response.ok) throw new HttpError(503, 'Не удалось проверить платёжный терминал. Оплата временно недоступна.');
-  const merchant = z.object({ merchant_id: z.string().min(1), firm_name: z.string().min(1), qrt_name: z.string(), qrt_is_b2c: z.boolean(), vat: z.string().optional(), requires_receipt: z.boolean() }).parse(JSON.parse(Buffer.from(await limitedBody(response, 16000)).toString()));
+  const merchant = z.object({ merchant_id: z.string().min(1), firm_name: z.string().min(1), qrt_name: z.string(), qrt_is_b2c: z.boolean(), vat: z.string().optional(), requires_receipt: z.boolean(), is_nomenclature: z.boolean().optional() }).parse(JSON.parse(Buffer.from(await limitedBody(response, 16000)).toString()));
   if (!merchant.qrt_is_b2c || (mode === 'live' && /тестовая компания/i.test(merchant.firm_name))) throw new HttpError(503, 'Терминал не готов к приёму оплаты покупателей.');
   return merchant;
 }

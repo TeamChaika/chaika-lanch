@@ -132,7 +132,7 @@ export async function createPayment(input: unknown, origin: string) {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, delivery);
   if (total * 100 !== data.expectedTotal || total > 1000000) throw new HttpError(409, 'Сумма заказа изменилась. Обновите корзину перед оплатой.');
   await paymentRateLimit(owner);
-  if (mode === 'live') await checkMerchant(mode);
+  const merchant = mode === 'live' ? await checkMerchant(mode) : undefined;
   const active = await reserveActive(owner, mode, data.id, fingerprint);
   if (active) return active;
   const record: PaymentRecord = { id: data.id, purpose: `${mode}-payment`, mode, owner, fingerprint, createdAt: Date.now(), checkedAt: 0, state: 'creating', items, delivery, total, gift: weeklyGiftStatus(items).eligible, customer, fulfillment: 'new' };
@@ -152,12 +152,12 @@ export async function createPayment(input: unknown, origin: string) {
   try {
     result = await createQr({ sum: total * 100, payment_purpose: `Чайка Обеды · ${mode === 'sandbox' ? 'ТЕСТ · ' : ''}${data.id}`,
       redirect_url: `${origin}/payment/${data.id}`, notification_url: `${origin}/api/payments/${data.id}/webhook?mode=${mode}&token=${webhookToken(data.id, mode)}`,
-      ...(customer ? { customer_email: customer.email } : {}),
-      nomenclature: [...items.map((item) => ({ name: `${item.name} · ${item.date}`.slice(0, 100), count: item.quantity, price: item.price * 100, amount: item.price * item.quantity * 100, ...(mode === 'live' ? { payment_method: 1 } : {}) })),
-        { name: 'Доставка', count: new Set(items.map((item) => item.date)).size, price: site.deliveryFee * 100, amount: delivery * 100, ...(mode === 'live' ? { payment_method: 1 } : {}) }],
+      ...(customer && merchant?.requires_receipt ? { customer_email: customer.email } : {}),
+      ...(mode === 'sandbox' || merchant?.requires_receipt || merchant?.is_nomenclature ? { nomenclature: [...items.map((item) => ({ name: `${item.name} · ${item.date}`.slice(0, 100), count: item.quantity, price: item.price * 100, amount: item.price * item.quantity * 100, ...(mode === 'live' ? { payment_method: 1 } : {}) })),
+        { name: 'Доставка', count: new Set(items.map((item) => item.date)).size, price: site.deliveryFee * 100, amount: delivery * 100, ...(mode === 'live' ? { payment_method: 1 } : {}) }] } : {}),
     }, mode);
   } catch (error) {
-    const failed = await mutate(record.id, mode, (current) => current.operationId ? current : ({ ...current, state: error instanceof ProviderError ? error.outcome : 'unknown', reviewReason: 'Ответ создания платежа не подтверждён' }));
+    const failed = await mutate(record.id, mode, (current) => current.operationId ? current : ({ ...current, state: error instanceof ProviderError ? error.outcome : 'unknown', reviewReason: error instanceof ProviderError && error.diagnostic ? error.diagnostic : 'Ответ создания платежа не подтверждён' }));
     return publicPayment(failed);
   }
   const saved = await mutate(record.id, mode, (current) => {
